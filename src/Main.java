@@ -84,18 +84,18 @@ public class Main extends JFrame {
 			tileQueue.enqueue(rand.nextInt(10));
 		
 		//Dequeue numbers from the queue to populate the queue tiles
-		lblTile1 = new JLabel(Integer.toString(tileQueue.dequeue()));
-		lblTile2 = new JLabel(Integer.toString(tileQueue.dequeue()));
-		lblTile3 = new JLabel(Integer.toString(tileQueue.dequeue()));
-		lblTile4 = new JLabel(Integer.toString(tileQueue.dequeue()));
-		lblTile5 = new JLabel(Integer.toString(tileQueue.dequeue()));
+		lblTile1 = new JLabel("   " + Integer.toString(tileQueue.dequeue()) + "   ");
+		lblTile2 = new JLabel("   " + Integer.toString(tileQueue.dequeue()) + "   ");
+		lblTile3 = new JLabel("   " + Integer.toString(tileQueue.dequeue()) + "   ");
+		lblTile4 = new JLabel("   " + Integer.toString(tileQueue.dequeue()) + "   ");
+		lblTile5 = new JLabel("   " + Integer.toString(tileQueue.dequeue()) + "   ");
 
 		//Add the queue tiles to the queue panel
-		pnlQueue.add(lblTile1);
-		pnlQueue.add(lblTile2);
-		pnlQueue.add(lblTile3);
-		pnlQueue.add(lblTile4);
 		pnlQueue.add(lblTile5);
+		pnlQueue.add(lblTile4);
+		pnlQueue.add(lblTile3);
+		pnlQueue.add(lblTile2);
+		pnlQueue.add(lblTile1);
 		
 		//Add the panels to the frame
 		this.add(pnlGrid, BorderLayout.CENTER);
