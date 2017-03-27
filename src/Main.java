@@ -162,7 +162,7 @@ public class Main extends JFrame {
 				lblTile4.setText(lblTile3.getText());
 				lblTile3.setText(lblTile2.getText());
 				lblTile2.setText(lblTile1.getText());
-				lblTile1.setText(Integer.toString(tileQueue.dequeue()));
+				lblTile1.setText("   " + Integer.toString(tileQueue.dequeue()) + "   ");
 			
 				//Lowers the move counter
 				int movesLeft = Integer.parseInt(lblMoveCounter.getText());
