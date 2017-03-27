@@ -153,7 +153,7 @@ public class Main extends JFrame {
 				else{
 					
 					//Update the clicked tile with the number from the queue
-					tile.setNumber(Integer.parseInt(lblTile5.getText()));
+					tile.setNumber(Integer.parseInt(lblTile5.getText().replaceAll(" ", "")));
 					tile.setText(lblTile5.getText());
 				}
 				
