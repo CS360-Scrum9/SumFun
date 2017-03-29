@@ -17,6 +17,7 @@ public class Main extends JFrame {
 	private JPanel pnlGrid;
 	private JPanel pnlQueue;
 	private JPanel pnlNorth;
+	private JPanel pnlWest;
 	
 	private JLabel lblTile1;
 	private JLabel lblTile2;
@@ -32,9 +33,12 @@ public class Main extends JFrame {
 	
 	private int queueSize = 60;
 	
+	private int playerScore;
+	private JLabel scoreLabel;
+	
 	public Main() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(600,600);
+		setSize(700,700);
 		setLayout(new BorderLayout());
 		
 		lblCounter = new JLabel("Moves Left:  ");
@@ -44,6 +48,10 @@ public class Main extends JFrame {
 		pnlGrid = new JPanel();
 		pnlQueue = new JPanel();
 		pnlNorth = new JPanel();
+		pnlWest = new JPanel();
+		
+		gl = new GridLayout(1,1);
+		pnlWest.setLayout(gl);
 		
 		gl = new GridLayout(9, 9);
 		pnlGrid.setLayout(gl);
@@ -75,6 +83,10 @@ public class Main extends JFrame {
 		pnlNorth.add(lblCounter);
 		pnlNorth.add(lblMoveCounter);
 		
+		playerScore = 0;
+		scoreLabel = new JLabel(" Score: " + playerScore + " ");
+		pnlWest.add(scoreLabel);
+		
 		//Create a queue instant for the queue tiles
 		tileQueue = new Queue(queueSize);
 		
@@ -101,6 +113,7 @@ public class Main extends JFrame {
 		this.add(pnlGrid, BorderLayout.CENTER);
 		this.add(pnlNorth, BorderLayout.NORTH);
 		this.add(pnlQueue, BorderLayout.EAST);
+		this.add(pnlWest, BorderLayout.WEST);
 	}
 	
 	public class ButtonHandler implements ActionListener {
@@ -127,16 +140,40 @@ public class Main extends JFrame {
 				number += tiles[row - 1][column + 1].getNumber();
 				number += tiles[row - 1][column - 1].getNumber();	
 			
-				if(number % 10 == 0){
+				if(number % 10 == Integer.parseInt(lblTile5.getText().replaceAll(" ", ""))){
 					
-					//Set all surrounding tile's text to blank
+					int scoreCounter = 0;
+					//Calculates Score and sets all surrounding tile's text to blank 
+					if(!tiles[row + 1][column].getText().equals(""))
+						scoreCounter++;
 					tiles[row + 1][column].setText("");
+					
+					if(!tiles[row + 1][column + 1].getText().equals(""))
+						scoreCounter++;
 					tiles[row + 1][column + 1].setText("");
+					
+					if(!tiles[row + 1][column - 1].getText().equals(""))
+						scoreCounter++;
 					tiles[row + 1][column - 1].setText("");
+					
+					if(!tiles[row][column + 1].getText().equals(""))
+						scoreCounter++;
 					tiles[row][column + 1].setText("");
+					
+					if(!tiles[row][column - 1].getText().equals(""))
+						scoreCounter++;
 					tiles[row][column - 1].setText("");
+					
+					if(!tiles[row - 1][column].getText().equals(""))
+						scoreCounter++;
 					tiles[row - 1][column].setText("");
+					
+					if(!tiles[row - 1][column + 1].getText().equals(""))
+						scoreCounter++;
 					tiles[row - 1][column + 1].setText("");
+					
+					if(!tiles[row - 1][column - 1].getText().equals(""))
+						scoreCounter++;
 					tiles[row - 1][column - 1].setText("");
 				
 					//Set all surrounding tile's numbers to zero
@@ -148,6 +185,12 @@ public class Main extends JFrame {
 					tiles[row - 1][column].setNumber(0);
 					tiles[row - 1][column + 1].setNumber(0);
 					tiles[row - 1][column - 1].setNumber(0);
+					
+					if(scoreCounter >= 3){
+						playerScore += (scoreCounter * 10);
+						scoreLabel.setText(" Score: " + playerScore + " ");
+					}
+					scoreCounter = 0;
 				}	
 				
 				else{
