@@ -7,8 +7,6 @@ public class Tile extends JButton {
 
 	private int number, row, column;
 	
-	private static int MAXTILES = 81;
-	private static int nTiles = 0;
 	
 	public Tile(int row, int column) {
 		Random rand = new Random();
@@ -21,6 +19,20 @@ public class Tile extends JButton {
 			this.setText(Integer.toString(number));
 		}
 	}
+	// region: Getter and Setter methods.
+	public int getNumber() {
+		return number;
+	}
+	public int getRow() {
+		return row;
+	}
+	public int getColumn(){
+		return column;
+	}
+	public void setNumber(int number){
+		this.number = number;
+	}
+	// endregion
 	
 	/*public static Tile getTile() {
 		
@@ -36,21 +48,6 @@ public class Tile extends JButton {
 	
 	}
 	*/
-	public int getNumber() {
-		return number;
-	}
-	
-	public int getRow() {
-		return row;
-	}
-	
-	public int getColumn(){
-		return column;
-	}
-	
-	public void setNumber(int number){
-		this.number = number;
-	}
 	/*
 	private boolean getSumOfDigits() {
 		int first = nTiles % 10;

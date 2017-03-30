@@ -11,7 +11,7 @@ public class Queue {
 	public Queue(int arraySize) {
 		tileQueue = new int[arraySize];
 	}
-	
+
 	private int nextIndex(int i) {
 		return (i + 1) % tileQueue.length;
 	}
@@ -19,7 +19,7 @@ public class Queue {
 	public void ensureCapacity(int minimumCapacity) {
 	      int biggerArray[ ];
 	      int n1, n2;
-	      if ( tileQueue.length >= minimumCapacity )                                  // No change needed
+	      if ( tileQueue.length >= minimumCapacity ) // No change needed
 	         return;
 	      else if ( manyItems == 0 )   // Just increase the capacity ignoring array elements
 	         tileQueue = new int[ minimumCapacity ];

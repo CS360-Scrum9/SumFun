@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,13 +24,14 @@ public class BoardView extends JFrame {
 	private JPanel pnlGrid;
 	private JPanel pnlQueue;
 	private JPanel pnlNorth;
-	private JPanel pnlWest;
+	// private JPanel pnlWest;
 	
 	private JLabel qTile1;
 	private JLabel qTile2;
 	private JLabel qTile3;
 	private JLabel qTile4;
 	private JLabel qTile5;
+	private JLabel qTitle;
 	
 	private GridLayout gl;
 	
@@ -46,25 +48,25 @@ public class BoardView extends JFrame {
 		setSize(700,700);
 		setLayout(new BorderLayout());
 		
-		lblCounter = new JLabel("Moves Left:  ");
-		lblMoveCounter = new JLabel("" + movecount);
+		lblCounter = new JLabel("Moves Left:  ", SwingConstants.CENTER);
+		lblMoveCounter = new JLabel("" + movecount, SwingConstants.CENTER);
 		
 		pnlMain = new JPanel();
 		pnlGrid = new JPanel();
 		pnlQueue = new JPanel();
 		pnlNorth = new JPanel();
-		pnlWest = new JPanel();
+		// pnlWest = new JPanel();
 		
-		gl = new GridLayout(1,1);
-		pnlWest.setLayout(gl);
+		// gl = new GridLayout(1,1);
+		// pnlWest.setLayout(gl);
 		
 		gl = new GridLayout(9, 9);
 		pnlGrid.setLayout(gl);
 		
-		gl = new GridLayout(1, 2);
+		gl = new GridLayout(1, 3);
 		pnlNorth.setLayout(gl);
 		
-		gl = new GridLayout(5, 1);
+		gl = new GridLayout(6, 1);
 		pnlQueue.setLayout(gl);
 		
 		ButtonHandler bl = new ButtonHandler();
@@ -78,13 +80,14 @@ public class BoardView extends JFrame {
 				}
 			}
 		}
+
+		score = new Scoring();
+		scoreLabel = new JLabel(score.toString(), SwingConstants.CENTER);
 		
 		pnlNorth.add(lblCounter);
 		pnlNorth.add(lblMoveCounter);
-		
-		score = new Scoring();
-		scoreLabel = new JLabel(score.toString());
-		pnlWest.add(scoreLabel);
+		pnlNorth.add(scoreLabel);
+		// pnlWest.add(scoreLabel);
 		
 		//Create a queue instant for the queue tiles
 		tileQueue = new Queue(queueSize);
@@ -100,8 +103,12 @@ public class BoardView extends JFrame {
 		qTile3 = new JLabel(Integer.toString(tileQueue.dequeue()), SwingConstants.CENTER);
 		qTile4 = new JLabel(Integer.toString(tileQueue.dequeue()), SwingConstants.CENTER);
 		qTile5 = new JLabel(Integer.toString(tileQueue.dequeue()), SwingConstants.CENTER);
+		qTitle = new JLabel("\u2193 Queue \u2193");
+		qTile5.setOpaque(true);
+		qTile5.setBackground(Color.GREEN);
 
 		//Add the queue tiles to the queue panel
+		pnlQueue.add(qTitle);
 		pnlQueue.add(qTile5);
 		pnlQueue.add(qTile4);
 		pnlQueue.add(qTile3);
@@ -112,7 +119,7 @@ public class BoardView extends JFrame {
 		this.add(pnlGrid, BorderLayout.CENTER);
 		this.add(pnlNorth, BorderLayout.NORTH);
 		this.add(pnlQueue, BorderLayout.EAST);
-		this.add(pnlWest, BorderLayout.WEST);
+		// this.add(pnlWest, BorderLayout.WEST);
 	}
 	
 	public class ButtonHandler implements ActionListener {
@@ -122,21 +129,17 @@ public class BoardView extends JFrame {
 			
 			Tile tile = (Tile) e.getSource();
 			
-			//Only allow moves into unoccupied tiles of the game board
-			if(tile.getText()== ""){
-				if(TileBehavior.placeTile(tile, Integer.parseInt(qTile5.getText()), score)){
-					// Adjust the queue
-					qTile5.setText(qTile4.getText());
-					qTile4.setText(qTile3.getText());
-					qTile3.setText(qTile2.getText());
-					qTile2.setText(qTile1.getText());
-					qTile1 = new JLabel(Integer.toString(tileQueue.dequeue()), SwingConstants.CENTER);
-					// Lowers the move counter
-					lblMoveCounter.setText("" + movecount--);
-					// Update Score
-					scoreLabel.setText(score.toString());
-				}
-				
+			if(TileBehavior.placeTile(tile, Integer.parseInt(qTile5.getText()), score)){
+				// Adjust the queue
+				qTile5.setText(qTile4.getText());
+				qTile4.setText(qTile3.getText());
+				qTile3.setText(qTile2.getText());
+				qTile2.setText(qTile1.getText());
+				qTile1 = new JLabel(Integer.toString(tileQueue.dequeue()), SwingConstants.CENTER);
+				// Lowers the move counter
+				lblMoveCounter.setText("" + movecount--);
+				// Update Score
+				scoreLabel.setText(score.toString());
 			}
 		}	
 	}
