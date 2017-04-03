@@ -38,18 +38,14 @@ public class TileBehavior {
 	 * @param score Scoring object being used to keep the player's score.
 	 * @return Boolean value saying if an action was taken.
 	 */
-	public static boolean placeTile(Tile tile, int qValue, Scoring score){
-		if(tile.getText() == "" && hasNeighbors(tile)){
-			if(checkNeighbors(tile, qValue)){
-				score.setScore(tile);
-				resetNeighbors(tile);
-			} else {
-				tile.setNumber(qValue);
-				tile.setText("" + qValue);
-			}
-			return true;
+	public static void placeTile(Tile tile, int qValue, Scoring score){
+		if(checkNeighbors(tile, qValue)){
+			score.setScore(tile);
+			resetNeighbors(tile);
+		} else {
+			tile.setNumber(qValue);
+			tile.setText("" + qValue);
 		}
-		return false;
 	}
 	/**
 	 * Checks the sum of the next number with all the values of each of the neighboring tiles
@@ -64,15 +60,12 @@ public class TileBehavior {
 		column = tile.getColumn();
 
 		//Add the numbers from all surrounding tiles
-		sum += tiles[row + 1][column].getNumber();
-		sum += tiles[row + 1][column + 1].getNumber();
-		sum += tiles[row + 1][column - 1].getNumber();
-		sum += tiles[row][column + 1].getNumber();
-		sum += tiles[row][column - 1].getNumber();
-		sum += tiles[row - 1][column].getNumber();
-		sum += tiles[row - 1][column + 1].getNumber();
-		sum += tiles[row - 1][column - 1].getNumber();
-		return sum%10 == n;
+		for(int i = -1; i < 2; i++){
+			for(int j = -1; j < 2; j++){
+				sum += tiles[row+i][column+j].getNumber();
+			}
+		}
+		return sum > n && sum%10 == n;
 	}
 	/**
 	 * Resets the values of all neighbor tiles. Only call if checkNeighbors() is true.
@@ -89,22 +82,5 @@ public class TileBehavior {
 			}
 		}
 		
-	}
-	/**
-	 * Verifies that the given tile has neighbors.
-	 * @param tile The origin tile whose neighbors are in question.
-	 * @return Boolean values on if the tile has neighbors or not.
-	 */
-	protected static boolean hasNeighbors(Tile tile){
-		int row, column;
-		row = tile.getRow();
-		column = tile.getColumn();
-		for(int i = -1; i < 2; i++){
-			for(int j = -1; j < 2; j++){
-				if(tiles[row+i][column+j].getNumber() > 0)
-					return true;
-			}
-		}
-		return false;
 	}
 }

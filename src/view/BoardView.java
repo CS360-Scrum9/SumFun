@@ -129,18 +129,17 @@ public class BoardView extends JFrame {
 			
 			Tile tile = (Tile) e.getSource();
 			
-			if(TileBehavior.placeTile(tile, Integer.parseInt(qTile5.getText()), score)){
-				// Adjust the queue
-				qTile5.setText(qTile4.getText());
-				qTile4.setText(qTile3.getText());
-				qTile3.setText(qTile2.getText());
-				qTile2.setText(qTile1.getText());
-				qTile1 = new JLabel(Integer.toString(tileQueue.dequeue()), SwingConstants.CENTER);
-				// Lowers the move counter
-				lblMoveCounter.setText("" + movecount--);
-				// Update Score
-				scoreLabel.setText(score.toString());
-			}
+			TileBehavior.placeTile(tile, Integer.parseInt(qTile5.getText()), score);
+			// Adjust the queue
+			qTile5.setText(qTile4.getText());
+			qTile4.setText(qTile3.getText());
+			qTile3.setText(qTile2.getText());
+			qTile2.setText(qTile1.getText());
+			qTile1.setText(Integer.toString(tileQueue.dequeue()));
+			// Lowers the move counter
+			lblMoveCounter.setText("" + movecount--);
+			// Update Score
+			scoreLabel.setText(score.toString());
 		}	
 	}
 }
