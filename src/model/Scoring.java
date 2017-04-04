@@ -16,7 +16,7 @@ public class Scoring {
 		column = tile.getColumn();
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
-				if(TileBehavior.tiles[row+i][column+j].getNumber() > 0)
+				if(!(i == 0 && j == 0) && TileBehavior.tiles[row+i][column+j].getText() != "")
 					count++;
 			}
 		}
