@@ -33,30 +33,4 @@ public class Tile extends JButton {
 		this.number = number;
 	}
 	// endregion
-	
-	/*public static Tile getTile() {
-		
-		Tile tile = null;
-		
-		if (nTiles < MAXTILES) {
-			
-			tile = new Tile();
-			nTiles++;
-		}
-		
-		return tile;
-	
-	}
-	*/
-	/*
-	private boolean getSumOfDigits() {
-		int first = nTiles % 10;
-		int second = (nTiles / 10);
-		if (first + second == 8) {
-			return true;
-		}
-		return false;
-	}
-	*/
-	
 }

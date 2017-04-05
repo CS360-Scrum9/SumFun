@@ -1,7 +1,10 @@
 package model;
 
-public class Scoring {
+import java.util.Observable;
+
+public class Scoring extends Observable{
 	protected int playerScore;
+	private TileBehavior tb = TileBehavior.getTileBehavior();
 	
 	public Scoring(){
 		playerScore = 0;
@@ -16,7 +19,7 @@ public class Scoring {
 		column = tile.getColumn();
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
-				if(!(i == 0 && j == 0) && TileBehavior.tiles[row+i][column+j].getText() != "")
+				if(!(i == 0 && j == 0) && tb.tiles[row+i][column+j].getText() != "")
 					count++;
 			}
 		}

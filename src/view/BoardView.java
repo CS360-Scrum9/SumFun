@@ -5,7 +5,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -15,12 +16,10 @@ import javax.swing.SwingConstants;
 
 import model.*;
 
-public class BoardView extends JFrame {
+public class BoardView extends JFrame implements Observer{
 	
-	private JLabel lblCounter;
-	private JLabel lblMoveCounter;
 	
-	private JPanel pnlMain;
+	// private JPanel pnlMain;
 	private JPanel pnlGrid;
 	private JPanel pnlQueue;
 	private JPanel pnlNorth;
@@ -32,16 +31,19 @@ public class BoardView extends JFrame {
 	private JLabel qTile4;
 	private JLabel qTile5;
 	private JLabel qTitle;
+	private JLabel scoreLabel;
+	private JLabel lblCounter;
+	private JLabel lblMoveCounter;
 	
 	private GridLayout gl;
-	
-	private Queue tileQueue;
 	
 	private int queueSize = 60;
 	private int movecount = 50;
 	
 	private Scoring score;
-	private JLabel scoreLabel;
+	private Queue tileQueue;
+	private TileBehavior tb = TileBehavior.getTileBehavior();
+	
 	
 	public BoardView() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -51,7 +53,7 @@ public class BoardView extends JFrame {
 		lblCounter = new JLabel("Moves Left:  ", SwingConstants.CENTER);
 		lblMoveCounter = new JLabel("" + movecount, SwingConstants.CENTER);
 		
-		pnlMain = new JPanel();
+		// pnlMain = new JPanel();
 		pnlGrid = new JPanel();
 		pnlQueue = new JPanel();
 		pnlNorth = new JPanel();
@@ -74,9 +76,9 @@ public class BoardView extends JFrame {
 		//Adds tiles to the grid
 		for (int i = 0; i < 11; i++) {
 			for (int j = 0; j < 11; j++) {
-				TileBehavior.addTile(i, j, bl);
+				tb.addTile(i, j, bl);
 				if(i > 0 && i < 10 && j > 0 && j < 10){
-					pnlGrid.add(TileBehavior.getTile(i, j));
+					pnlGrid.add(tb.getTile(i, j));
 				}
 			}
 		}
@@ -129,7 +131,7 @@ public class BoardView extends JFrame {
 			
 			Tile tile = (Tile) e.getSource();
 			
-			TileBehavior.placeTile(tile, Integer.parseInt(qTile5.getText()), score);
+			tb.placeTile(tile, Integer.parseInt(qTile5.getText()), score);
 			// Adjust the queue
 			qTile5.setText(qTile4.getText());
 			qTile4.setText(qTile3.getText());
@@ -141,5 +143,11 @@ public class BoardView extends JFrame {
 			// Update Score
 			scoreLabel.setText(score.toString());
 		}	
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }
