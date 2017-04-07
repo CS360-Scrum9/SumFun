@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,6 +25,8 @@ public class BoardView extends JFrame implements Observer{
 	private JPanel pnlQueue;
 	private JPanel pnlNorth;
 	// private JPanel pnlWest;
+	
+	private JButton qRefresh;
 	
 	private JLabel qTile1;
 	private JLabel qTile2;
@@ -68,7 +71,7 @@ public class BoardView extends JFrame implements Observer{
 		gl = new GridLayout(1, 3);
 		pnlNorth.setLayout(gl);
 		
-		gl = new GridLayout(6, 1);
+		gl = new GridLayout(7, 1);
 		pnlQueue.setLayout(gl);
 		
 		ButtonHandler bl = new ButtonHandler();
@@ -105,9 +108,11 @@ public class BoardView extends JFrame implements Observer{
 		qTile3 = new JLabel(Integer.toString(tileQueue.dequeue()), SwingConstants.CENTER);
 		qTile4 = new JLabel(Integer.toString(tileQueue.dequeue()), SwingConstants.CENTER);
 		qTile5 = new JLabel(Integer.toString(tileQueue.dequeue()), SwingConstants.CENTER);
-		qTitle = new JLabel("\u2193 Queue \u2193");
+		qTitle = new JLabel("\u2193 Queue \u2193", SwingConstants.CENTER);
 		qTile5.setOpaque(true);
 		qTile5.setBackground(Color.GREEN);
+		qRefresh = new JButton("<html>Refresh<br>Queue</html>");
+		qRefresh.addActionListener(bl);
 
 		//Add the queue tiles to the queue panel
 		pnlQueue.add(qTitle);
@@ -116,6 +121,7 @@ public class BoardView extends JFrame implements Observer{
 		pnlQueue.add(qTile3);
 		pnlQueue.add(qTile2);
 		pnlQueue.add(qTile1);
+		pnlQueue.add(qRefresh);
 		
 		//Add the panels to the frame
 		this.add(pnlGrid, BorderLayout.CENTER);
@@ -125,23 +131,30 @@ public class BoardView extends JFrame implements Observer{
 	}
 	
 	public class ButtonHandler implements ActionListener {
+		
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
-			Tile tile = (Tile) e.getSource();
-			
-			tb.placeTile(tile, Integer.parseInt(qTile5.getText()), score);
-			// Adjust the queue
-			qTile5.setText(qTile4.getText());
-			qTile4.setText(qTile3.getText());
-			qTile3.setText(qTile2.getText());
-			qTile2.setText(qTile1.getText());
-			qTile1.setText(Integer.toString(tileQueue.dequeue()));
-			// Lowers the move counter
-			lblMoveCounter.setText("" + movecount--);
-			// Update Score
-			scoreLabel.setText(score.toString());
+
+			System.out.println(e.getActionCommand());
+			if(e.getActionCommand().matches("<html>Refresh<br>Queue</html>")){
+				qRefresh.setEnabled(false);
+			} else {
+				Tile tile = (Tile) e.getSource();
+				if(tile.getText().matches("")){
+					tb.placeTile(tile, Integer.parseInt(qTile5.getText()), score);
+					// Adjust the queue
+					qTile5.setText(qTile4.getText());
+					qTile4.setText(qTile3.getText());
+					qTile3.setText(qTile2.getText());
+					qTile2.setText(qTile1.getText());
+					qTile1.setText(Integer.toString(tileQueue.dequeue()));
+					// Lowers the move counter
+					lblMoveCounter.setText("" + --movecount);
+					// Update Score
+					scoreLabel.setText(score.toString());
+				}
+			}
 		}	
 	}
 

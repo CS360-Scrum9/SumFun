@@ -53,7 +53,7 @@ public class TileBehavior extends Observable{
 	 * @return Boolean value saying if an action was taken.
 	 */
 	public void placeTile(Tile tile, int qValue, Scoring score){
-		if(checkNeighbors(tile, qValue)){
+		if(tile.getText() == "" && checkNeighbors(tile, qValue)){
 			score.setScore(tile);
 			resetNeighbors(tile);
 		} else {
