@@ -4,7 +4,7 @@ import model.ObservableTile;
 import model.Scoring;
 import model.TileQueue;
 import view.BoardView;
-
+import view.HighScoreBoard;
 import controller.SumFunController;
 import model.*;
 import view.BoardView;
@@ -15,7 +15,7 @@ public class Driver {
 	 * @param args Any arguments passed when calling the program.
 	 */
 	public static void main(String[] args) {
-		
+		HighScoreBoard highScores = new HighScoreBoard(1);
 		ObservableTile[][] tiles = new ObservableTile[11][11];
 		for(int i = 0; i < 11; i++){
 			for(int j = 0; j < 11; j++){
