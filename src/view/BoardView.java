@@ -23,13 +23,13 @@ public class BoardView extends JFrame implements Observer{
 	private JPanel pnlNorth;
 	// private JPanel pnlWest;
 	
+	private JButton qRefresh;
+	
 	private JLabel[] qTiles;
 	private JLabel qTitle;
 	private JLabel scoreLabel;
 	private JLabel lblCounter;
 	private JLabel lblMoveCounter;
-	
-	private int moveCount = 50;
 	
 	private Scoring score;
 	private TileQueue tileQ;
@@ -66,7 +66,7 @@ public class BoardView extends JFrame implements Observer{
 		
 		pnlGrid.setLayout(new GridLayout(9, 9));
 		pnlNorth.setLayout(new GridLayout(1, 3));
-		pnlQueue.setLayout(new GridLayout(6, 1));
+		pnlQueue.setLayout(new GridLayout(7, 1));
 		
 		tileButtons = new Tile[11][11];
 		
@@ -91,15 +91,17 @@ public class BoardView extends JFrame implements Observer{
 		// pnlWest.add(scoreLabel);
 		
 		//Add the queue tiles to the queue panel
+		qRefresh = new JButton("<html>Refresh<br>Queue</html>");
 		qTiles = new JLabel[5];
-		qTitle = new JLabel("\u2193 Queue \u2193");
+		qTitle = new JLabel("Queue");
 		pnlQueue.add(qTitle);
 		
 		for(int i = 4; i >= 0; i--){
-			qTiles[i] = new JLabel();
+			qTiles[i] = new JLabel("", SwingConstants.CENTER);
 			pnlQueue.add(qTiles[i]);
 		}
 		
+		pnlQueue.add(qRefresh);
 		qTiles[4].setOpaque(true);
 		qTiles[4].setBackground(Color.GREEN);
 		updateQueue();
@@ -157,5 +159,6 @@ public class BoardView extends JFrame implements Observer{
 			for(int j = 1; j < 10; j++)
 				tileButtons[i][j].addActionListener(bh);
 		}
+		qRefresh.addActionListener(bh);
 	}
 }

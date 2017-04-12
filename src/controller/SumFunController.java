@@ -3,6 +3,8 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+
 import model.*;
 import view.BoardView;
 
@@ -27,23 +29,30 @@ public class SumFunController {
 		board.addButtonHandler(new ButtonHandler());
 	}
 
+	// Should we have a different listener for the tiles?
 	public class ButtonHandler implements ActionListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int row, column;
-			Tile tile = (Tile) e.getSource();
-			row = tile.getRow();
-			column = tile.getColumn();
-			SumFunController control = new SumFunController();
+			if(e.getActionCommand().matches("<html>Refresh<br>Queue</html>")){
+				JButton qRefresh = (JButton) e.getSource();
+				qRefresh.setEnabled(false);
+				tileQ.reset();
+			} else {
+				int row, column;
+				Tile tile = (Tile) e.getSource();
+				row = tile.getRow();
+				column = tile.getColumn();
+				SumFunController control = new SumFunController();
+				// System.out.println("nextValue(): " + tileQ.getNextValue());
 			
-			System.out.println("nextValue(): " + tileQ.getNextValue());
-			
-			if(!tile.isOccupied()){
-				placeTile(tiles[row][column], tileQ.getNextValue());
-				tileQ.dequeue();
-				mc.decrementCount();
+				if(!tile.isOccupied()){
+					placeTile(tiles[row][column], tileQ.getNextValue());
+					tileQ.dequeue();
+					mc.decrementCount();
 			}
+			}
+			
 		
 		}	
 	}
