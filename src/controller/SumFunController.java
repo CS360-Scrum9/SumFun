@@ -68,9 +68,9 @@ public class SumFunController {
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand().equals("New")){
 				if(timed == true)
-					resetGame();
+					resetGame(1);
 				else
-					resetGame();
+					resetGame(0);
 			}
 			else
 				System.exit(0);
@@ -152,7 +152,7 @@ public class SumFunController {
 	}
 	
 	
-	private void resetGame(){
+	private void resetGame(int version){
 		for(int i = 1; i < 10; i++){
 			for(int j = 1; j < 10; j++){
 				tiles[i][j].resetTile();
@@ -162,6 +162,7 @@ public class SumFunController {
 		mc.setMoveCount(50);
 		mc.setTileCount(49);
 		score.setScore(0);
+		board.switchGameModeView(version);
 	}
 	
 	private void checkGameOver(){
@@ -189,8 +190,14 @@ public class SumFunController {
 					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
 		}
 		
-		if(jOptionNumber == JOptionPane.YES_OPTION)
-			resetGame();
+		if(jOptionNumber == JOptionPane.YES_OPTION){
+			if(timed == true){
+				resetGame(1);
+			}
+			else{
+				resetGame(0);
+			}
+		}
 		else if(jOptionNumber == JOptionPane.NO_OPTION)
 			System.exit(0);		
 		

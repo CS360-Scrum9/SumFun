@@ -35,6 +35,8 @@ public class BoardView extends JFrame implements Observer{
 	private JLabel scoreLabel;
 	private JLabel lblCounter;
 	private JLabel lblMoveCounter;
+	private JLabel lblTimer;
+	private JLabel lblCountdown;
 	
 	private Scoring score;
 	private TileQueue tileQ;
@@ -59,6 +61,9 @@ public class BoardView extends JFrame implements Observer{
 		
 		lblCounter = new JLabel("Moves Left:  ", SwingConstants.CENTER);
 		lblMoveCounter = new JLabel("" + mc.getMoveCount(), SwingConstants.CENTER);
+		
+		lblTimer = new JLabel("Time Left:  ", SwingConstants.CENTER);
+		lblCountdown = new JLabel("5:00", SwingConstants.CENTER);
 		
 		// pnlMain = new JPanel();
 		pnlGrid = new JPanel();
@@ -156,6 +161,28 @@ public class BoardView extends JFrame implements Observer{
 		// this.add(pnlWest, BorderLayout.WEST);
 	}
 	
+	public void switchGameModeView(int version){
+		if(version == 1){
+			this.remove(pnlNorth);
+			pnlNorth = new JPanel();
+			pnlNorth.setLayout(new GridLayout(1, 3));
+			pnlNorth.add(lblTimer);
+			pnlNorth.add(lblCountdown);
+			pnlNorth.add(scoreLabel);
+			this.add(pnlNorth, BorderLayout.NORTH);
+		}
+		else{
+			this.remove(pnlNorth);
+			pnlNorth = new JPanel();
+			pnlNorth.setLayout(new GridLayout(1, 3));
+			pnlNorth.add(lblCounter);
+			pnlNorth.add(lblMoveCounter);
+			pnlNorth.add(scoreLabel);
+			this.add(pnlNorth, BorderLayout.NORTH);
+		}
+		
+	}
+	
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if(arg0 == this.score)
@@ -169,11 +196,11 @@ public class BoardView extends JFrame implements Observer{
 		
 	}
 	
-	public void updateScore(){
+	private void updateScore(){
 		scoreLabel.setText(score.toString());
 	}
 	
-	public void updateTile(Observable arg0){
+	private void updateTile(Observable arg0){
 		int row, column;
 		ObservableTile tile = (ObservableTile) arg0;
 		row = tile.getRow();
@@ -187,13 +214,13 @@ public class BoardView extends JFrame implements Observer{
 		}
 	}
 	
-	public void updateQueue(){	
+	private void updateQueue(){	
 		int[] currentQ = tileQ.getCurrentQueue();
 		for(int i = 4; i >= 0; i--)
 			qTiles[i].setText("" + currentQ[i]);
 	}
 	
-	public void updateMoveCounter(){
+	private void updateMoveCounter(){
 		lblMoveCounter.setText("" + mc.getMoveCount());
 	}
 	
