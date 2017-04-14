@@ -31,13 +31,10 @@ public class TileQueue extends Observable{
 	}
 	
 	public void dequeue(){
-		for(int i = 4; i > 0; i--){
+		for(int i = 4; i > 0; i--)
 			currentQueue[i] = currentQueue[i-1];
-			System.out.println("currentQueue["+i+"]:" + currentQueue[i]);
-		}
 		
 		currentQueue[0] = tileQueue.dequeue();
-		System.out.println("currentQueue["+0+"]:" + currentQueue[0]);
 		setChanged();
 		notifyObservers();
 	}
@@ -47,8 +44,6 @@ public class TileQueue extends Observable{
 	}
 	
 	public int getNextValue(){
-		
-		System.out.println("next val: " + currentQueue[4]);
 		return currentQueue[4];
 	}
 	

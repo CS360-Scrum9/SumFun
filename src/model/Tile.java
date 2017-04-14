@@ -12,19 +12,24 @@ public class Tile extends JButton{
 	
 	// Constructor
 	public Tile(int row, int column) {
-		Random rand = new Random();
 		this.row = row;
 		this.column = column;
 		this.isOccupied = false;
-
-		//Populate only a 7X7 grid of tiles with numbers
+		populateGrid();
+	}
+	
+	//Populate only a 7X7 grid of tiles with numbers
+	public void populateGrid(){
+		Random rand = new Random();
 		if (row > 1 && row < 9 && column > 1 && column < 9){
-			this.setNumber(rand.nextInt(10));
-			this.setOccupied(true);
+			setOccupied(true);
+			setNumber(rand.nextInt(10));
+		}
+		else{
+			setOccupied(false);
+			setNumber(0);
 		}
 	}
-		
-	
 	// region: Getter and Setter methods.
 	public int getNumber() {
 		return number;

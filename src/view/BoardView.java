@@ -4,14 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
+import javax.swing.*;
 import model.*;
 
 public class BoardView extends JFrame implements Observer{
@@ -24,6 +20,15 @@ public class BoardView extends JFrame implements Observer{
 	// private JPanel pnlWest;
 	
 	private JButton qRefresh;
+	
+	private JMenuBar menuBar;
+	private JMenu fileMenu;
+	private JMenuItem newGameItem;
+	private JMenuItem exitItem;
+	private JRadioButtonMenuItem timedItem;
+	private JRadioButtonMenuItem untimedItem;
+	
+	private ButtonGroup buttonGroup;
 	
 	private JLabel[] qTiles;
 	private JLabel qTitle;
@@ -53,7 +58,7 @@ public class BoardView extends JFrame implements Observer{
 		mc.addObserver(this);
 		
 		lblCounter = new JLabel("Moves Left:  ", SwingConstants.CENTER);
-		lblMoveCounter = new JLabel("" + mc.getCount(), SwingConstants.CENTER);
+		lblMoveCounter = new JLabel("" + mc.getMoveCount(), SwingConstants.CENTER);
 		
 		// pnlMain = new JPanel();
 		pnlGrid = new JPanel();
@@ -105,11 +110,49 @@ public class BoardView extends JFrame implements Observer{
 		qTiles[4].setOpaque(true);
 		qTiles[4].setBackground(Color.GREEN);
 		updateQueue();
-	
+		
+		menuBar = new JMenuBar();
+		fileMenu = new JMenu("File");
+		
+		newGameItem = new JMenuItem("New Game");
+		newGameItem.setMnemonic(KeyEvent.VK_N);
+		newGameItem.setActionCommand("New");
+		
+		exitItem = new JMenuItem("Exit");
+		exitItem.setMnemonic(KeyEvent.VK_X);
+	    exitItem.setActionCommand("Exit");
+	    
+		untimedItem = new JRadioButtonMenuItem("Untimed Game");
+		untimedItem.setMnemonic(KeyEvent.VK_U);
+	    untimedItem.setActionCommand("Untimed");
+	    
+		timedItem = new JRadioButtonMenuItem("Timed Game");
+		timedItem.setMnemonic(KeyEvent.VK_T);
+	    timedItem.setActionCommand("Timed");
+	    
+	    buttonGroup = new ButtonGroup();
+	    buttonGroup.add(untimedItem);
+	    buttonGroup.add(timedItem);
+	    untimedItem.setSelected(true);
+	    
+	    fileMenu.add(newGameItem);
+	    fileMenu.addSeparator();
+	    fileMenu.add(timedItem);
+	    fileMenu.add(untimedItem);
+	    fileMenu.addSeparator();
+	    fileMenu.add(exitItem);
+	    
+	    menuBar.add(fileMenu);
+	    
+	    
+	    
+	    
+		
 		//Add the panels to the frame
 		this.add(pnlGrid, BorderLayout.CENTER);
 		this.add(pnlNorth, BorderLayout.NORTH);
 		this.add(pnlQueue, BorderLayout.EAST);
+		this.setJMenuBar(menuBar);
 		// this.add(pnlWest, BorderLayout.WEST);
 	}
 	
@@ -151,14 +194,28 @@ public class BoardView extends JFrame implements Observer{
 	}
 	
 	public void updateMoveCounter(){
-		lblMoveCounter.setText("" + mc.getCount());
+		lblMoveCounter.setText("" + mc.getMoveCount());
 	}
 	
-	public void addButtonHandler(ActionListener bh){
+	public void addTileButtonHandler(ActionListener al){
 		for(int i = 1; i < 10; i++){
 			for(int j = 1; j < 10; j++)
-				tileButtons[i][j].addActionListener(bh);
+				tileButtons[i][j].addActionListener(al);
 		}
-		qRefresh.addActionListener(bh);
 	}
+	
+	public void addRefreshButtonHandler(ActionListener al){
+		qRefresh.addActionListener(al);
+	}
+	
+	public void addMenuItemListener(ActionListener al){
+		newGameItem.addActionListener(al);
+		exitItem.addActionListener(al);
+	}
+	
+	public void addRadioButtonListener(ActionListener al){
+		untimedItem.addActionListener(al);
+		timedItem.addActionListener(al);
+	}
+
 }

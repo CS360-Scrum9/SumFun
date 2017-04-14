@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 import model.*;
 import view.BoardView;
@@ -15,6 +16,7 @@ public class SumFunController {
 	private ObservableTile[][] tiles;
 	private BoardView board;
 	private MoveCounter mc;
+	private boolean timed;
 	
 	public SumFunController(){}
 	
@@ -26,41 +28,70 @@ public class SumFunController {
 		this.board = board; 
 		this.mc = mc;
 		
-		board.addButtonHandler(new ButtonHandler());
+		timed = false;
+		
+		board.addTileButtonHandler(new TileButtonHandler());
+		board.addRefreshButtonHandler(new RefreshButtonHandler());
+		board.addRadioButtonListener(new RadioButtonListener());
+		board.addMenuItemListener(new MenuItemListener());
 	}
 
-	// Should we have a different listener for the tiles?
-	public class ButtonHandler implements ActionListener {
+	private class TileButtonHandler implements ActionListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(e.getActionCommand().matches("<html>Refresh<br>Queue</html>")){
-				JButton qRefresh = (JButton) e.getSource();
-				qRefresh.setEnabled(false);
-				tileQ.reset();
-			} else {
-				int row, column;
-				Tile tile = (Tile) e.getSource();
-				row = tile.getRow();
-				column = tile.getColumn();
-				SumFunController control = new SumFunController();
-				// System.out.println("nextValue(): " + tileQ.getNextValue());
-			
-				if(!tile.isOccupied()){
-					placeTile(tiles[row][column], tileQ.getNextValue());
-					tileQ.dequeue();
-					mc.decrementCount();
+			int row, column;
+			Tile tile = (Tile) e.getSource();
+			row = tile.getRow();
+			column = tile.getColumn();
+					
+			if(!tile.isOccupied()){
+				placeTile(tiles[row][column], tileQ.getNextValue());
+				checkGameOver(); 
 			}
-			}
-			
-		
 		}	
+	}
+	
+	private class RefreshButtonHandler implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JButton qRefresh = (JButton) e.getSource();
+			qRefresh.setEnabled(false);
+			tileQ.reset();
+		}
+	}
+	
+	private class MenuItemListener implements ActionListener {
+	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getActionCommand().equals("New")){
+				if(timed == true)
+					resetGame();
+				else
+					resetGame();
+			}
+			else
+				System.exit(0);
+		}
+	}
+	
+	private class RadioButtonListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getActionCommand().equals("Timed"))
+				timed = true;
+			else
+				timed = false;
+		}
 	}
 	
 
 	/**
 	 * Checks the sum of the next number with all the values of each of the neighboring tiles
-	 * and compares that sum to see if sum modular 10 equals the number (n) in the queue.
+	 * and compares that sum to see if sum modular 10 equals the number (qValue) in the queue.
 	 * @param tile The origin tile whose neighbors are to be checked.
 	 * @return Boolean saying if the move was successful.
 	 */
@@ -74,8 +105,6 @@ public class SumFunController {
 			for(int j = -1; j < 2; j++){
 				if(i != 0 || j != 0)
 					sum += tiles[row+i][column+j].getNumber();
-				
-				
 			}
 		}
 		return sum%10 == qValue;
@@ -99,6 +128,7 @@ public class SumFunController {
 				tiles[row+i][column+j].setNumber(0);
 			}
 		}
+		mc.setTileCount(mc.getTileCount() - count);
 		if(count >= 3){
 			newScore = score.getScore() + count * 10;
 			score.setScore(newScore);
@@ -117,7 +147,53 @@ public class SumFunController {
 		 else{ 
 			tile.setOccupied(true);
 			tile.setNumber(qValue);
-	
+			mc.setTileCount(mc.getTileCount() + 1);
 		 }
 	}
+	
+	
+	private void resetGame(){
+		for(int i = 1; i < 10; i++){
+			for(int j = 1; j < 10; j++){
+				tiles[i][j].resetTile();
+			}
+		}
+		tileQ.reset();
+		mc.setMoveCount(50);
+		mc.setTileCount(49);
+		score.setScore(0);
+	}
+	
+	private void checkGameOver(){
+		int jOptionNumber = 10;
+		
+		tileQ.dequeue();
+		
+		if(mc.getTileCount() >= 81){
+			Object[] o = {"Yes!", "No, I want to quit the game."};
+			jOptionNumber = JOptionPane.showOptionDialog(null, "Game Over! All tiles are occupied! New Game?",
+					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
+		}
+		
+		else if(mc.getTileCount() <= 0){
+			Object[] o = {"Yes!", "No, I want to quit the game."};
+			jOptionNumber = JOptionPane.showOptionDialog(null, "Congratulations! You win! New Game?",
+					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, o, o[1]);
+		}
+		
+		mc.decrementCount();
+		
+		if(mc.getMoveCount() <= 0){
+			Object[] o = {"Yes!", "No, I want to quit the game."};
+			jOptionNumber = JOptionPane.showOptionDialog(null, "Game Over! You ran out of moves! New Game?",
+					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
+		}
+		
+		if(jOptionNumber == JOptionPane.YES_OPTION)
+			resetGame();
+		else if(jOptionNumber == JOptionPane.NO_OPTION)
+			System.exit(0);		
+		
+	}
+	
 }

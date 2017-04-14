@@ -10,6 +10,12 @@ public class ObservableTile extends Observable {
 		tile = new Tile(row,column);
 	}
 	
+	public void resetTile(){
+		tile.populateGrid();
+		setChanged();
+		notifyObservers();
+	}
+	
 	// region: Getter and Setter methods.
 		public Tile getTile(){
 			return tile;
