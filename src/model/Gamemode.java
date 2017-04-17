@@ -7,7 +7,6 @@ public abstract class Gamemode {
 		
 	}
 	
-	public abstract Gamemode getGamemode();
 	
 	
 }

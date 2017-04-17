@@ -43,6 +43,7 @@ public class BoardView extends JFrame implements Observer{
 	private ObservableTile[][] tiles;
 	private Tile[][] tileButtons;
 	private MoveCounter mc;
+	private TimedGamemode timedMode;
 	
 	
 	
@@ -170,6 +171,8 @@ public class BoardView extends JFrame implements Observer{
 			pnlNorth.add(lblCountdown);
 			pnlNorth.add(scoreLabel);
 			this.add(pnlNorth, BorderLayout.NORTH);
+			timedMode = TimedGamemode.getGamemode();
+			timedMode.startTime(lblCountdown);
 		}
 		else{
 			this.remove(pnlNorth);
