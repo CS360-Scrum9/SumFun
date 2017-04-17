@@ -57,8 +57,8 @@ public class SumFunController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			JButton qRefresh = (JButton) e.getSource();
-			qRefresh.setEnabled(false);
 			tileQ.reset();
+			tileQ.setRefreshIsEnabled(false);
 		}
 	}
 	
@@ -182,13 +182,16 @@ public class SumFunController {
 					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, o, o[1]);
 		}
 		
-		mc.decrementCount();
-		
-		if(mc.getMoveCount() <= 0){
-			Object[] o = {"Yes!", "No, I want to quit the game."};
-			jOptionNumber = JOptionPane.showOptionDialog(null, "Game Over! You ran out of moves! New Game?",
-					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
+		if(timed == false){
+			mc.decrementCount();
+			
+			if(mc.getMoveCount() <= 0){
+				Object[] o = {"Yes!", "No, I want to quit the game."};
+				jOptionNumber = JOptionPane.showOptionDialog(null, "Game Over! You ran out of moves! New Game?",
+						"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
+			}
 		}
+		
 		
 		if(jOptionNumber == JOptionPane.YES_OPTION){
 			if(timed == true){

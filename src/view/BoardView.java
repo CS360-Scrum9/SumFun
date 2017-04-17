@@ -221,6 +221,12 @@ public class BoardView extends JFrame implements Observer{
 		int[] currentQ = tileQ.getCurrentQueue();
 		for(int i = 4; i >= 0; i--)
 			qTiles[i].setText("" + currentQ[i]);
+		
+		if(tileQ.refreshIsEnabled()){
+			qRefresh.setEnabled(true);
+		}
+		else
+			qRefresh.setEnabled(false);
 	}
 	
 	private void updateMoveCounter(){
