@@ -4,12 +4,19 @@ import java.util.Observable;
 
 public class MoveCounter extends Observable{
 	
+	private static MoveCounter mc;
 	private int moveCount;
 	private int tileCount;
 
-	public MoveCounter(){
+	private MoveCounter(){
 		moveCount = 50;
 		tileCount = 49;
+	}
+
+	public static MoveCounter getInstance(){
+		if(mc == null)
+			mc = new MoveCounter();
+		return mc;
 	}
 	
 	public int getMoveCount(){

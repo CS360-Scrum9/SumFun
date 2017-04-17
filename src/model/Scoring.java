@@ -3,10 +3,18 @@ package model;
 import java.util.Observable;
 
 	public class Scoring extends Observable{
+		
+		private static Scoring score;
 		protected int playerScore;
 		
-		public Scoring(){
+		private Scoring(){
 			playerScore = 0;
+		}
+		
+		public static Scoring getInstance(){
+			if(score == null)
+				score = new Scoring();
+			return score;
 		}
 		
 		public int getScore(){

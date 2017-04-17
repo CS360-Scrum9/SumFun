@@ -15,18 +15,18 @@ public class Driver {
 	 * @param args Any arguments passed when calling the program.
 	 */
 	public static void main(String[] args) {
-		HighScoreBoard highScores = new HighScoreBoard(1);
+		HighScoreBoard highScores = new HighScoreBoard("Untimed");
 		ObservableTile[][] tiles = new ObservableTile[11][11];
 		for(int i = 0; i < 11; i++){
 			for(int j = 0; j < 11; j++){
 				tiles[i][j] = new ObservableTile(i,j);
 			}
 		}
-		TileQueue tileQ = new TileQueue();
-		Scoring score = new Scoring();
-		MoveCounter mc = new MoveCounter();
+		TileQueue tileQ = TileQueue.getInstance();
+		Scoring score = Scoring.getInstance();
+		MoveCounter mc = MoveCounter.getInstance();
 		BoardView board = new BoardView(score,tileQ,tiles,mc);
-		SumFunController control = new SumFunController(score,tileQ,tiles,mc,board);
+		SumFunController control = new SumFunController(score,tileQ,tiles,mc,board,highScores);
 		board.setVisible(true);
 	}
 }

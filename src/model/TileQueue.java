@@ -5,14 +5,21 @@ import java.util.Random;
 
 public class TileQueue extends Observable{
 	
+	private static TileQueue tileQ;
 	private Queue tileQueue;
 	private int queueSize = 500;
 	private int currentQueueSize = 10;
 	private int[] currentQueue;
 	private boolean enableRefresh;
 	
-	public TileQueue(){
+	private TileQueue(){
 		reset();
+	}
+	
+	public static TileQueue getInstance(){
+		if(tileQ == null)
+			tileQ = new TileQueue();
+		return tileQ;
 	}
 	
 	public void reset(){
