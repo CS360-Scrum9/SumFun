@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import model.*;
 import view.BoardView;
+import view.HighScoreBoard;
 
 public class SumFunController {
 	
@@ -15,13 +16,16 @@ public class SumFunController {
 	private TileQueue tileQ;
 	private ObservableTile[][] tiles;
 	private BoardView board;
+	private HighScoreBoard highScoreBoard;
 	private MoveCounter mc;
+	private FileHandler fileHandler;
+	private TimedGamemode gamemode;
 	private boolean timed;
 	
 	public SumFunController(){}
 	
 	public SumFunController(Scoring score, TileQueue tileQ, 
-			ObservableTile[][] tiles, MoveCounter mc, BoardView board){
+			ObservableTile[][] tiles, MoveCounter mc, BoardView board, HighScoreBoard highScoreBoard){
 		this.score = score;
 		this.tileQ = tileQ;
 		this.tiles = tiles;
@@ -29,6 +33,10 @@ public class SumFunController {
 		this.mc = mc;
 		
 		timed = false;
+		fileHandler = new FileHandler();
+		
+		gamemode = TimedGamemode.getGamemode();
+		this.highScoreBoard = highScoreBoard;
 		
 		board.addTileButtonHandler(new TileButtonHandler());
 		board.addRefreshButtonHandler(new RefreshButtonHandler());
@@ -159,10 +167,16 @@ public class SumFunController {
 			}
 		}
 		tileQ.reset();
-		mc.setMoveCount(50);
 		mc.setTileCount(49);
 		score.setScore(0);
 		board.switchGameModeView(version);
+		highScoreBoard.setVisible(false);
+		
+		if (version == 1) {
+			gamemode.setTime(500);
+		} else {
+			mc.setMoveCount(50);
+		}
 	}
 	
 	private void checkGameOver(){
@@ -171,28 +185,58 @@ public class SumFunController {
 		tileQ.dequeue();
 		
 		if(mc.getTileCount() >= 81){
-			Object[] o = {"Yes!", "No, I want to quit the game."};
-			jOptionNumber = JOptionPane.showOptionDialog(null, "Game Over! All tiles are occupied! New Game?",
-					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
+			gameOver("Game Over! All tiles are occupied! New Game?");
 		}
 		
 		else if(mc.getTileCount() <= 0){
+			
+			if (timed) {
+				gamemode.stopTimer();
+			}
+			if (fileHandler.isHighScore(score.getScore(), timed)) {
+				String name = JOptionPane.showInputDialog(null, "Congratulations! New High Score!  Please enter your name");
+				if (timed) {
+					fileHandler.addScore(name, gamemode.getTime(), score.getScore(), timed);
+				} else {
+					fileHandler.addScore(name, Integer.toString(mc.getMoveCount()) , score.getScore(), timed);
+				}
+				if (timed) {
+					highScoreBoard.generateView("Timed");
+				} else {
+					highScoreBoard.generateView("Untimed");
+				}
+				highScoreBoard.setVisible(true);
+			}
+			
 			Object[] o = {"Yes!", "No, I want to quit the game."};
 			jOptionNumber = JOptionPane.showOptionDialog(null, "Congratulations! You win! New Game?",
 					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, o, o[1]);
+			
 		}
 		
 		if(timed == false){
 			mc.decrementCount();
 			
 			if(mc.getMoveCount() <= 0){
-				Object[] o = {"Yes!", "No, I want to quit the game."};
-				jOptionNumber = JOptionPane.showOptionDialog(null, "Game Over! You ran out of moves! New Game?",
-						"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
+				gameOver("Game Over! You ran out of moves! New Game?");
 			}
 		}
 		
+		reset(jOptionNumber);
 		
+	}
+	
+	public void gameOver(String message) {
+		int jOptionNumber;
+		
+		Object[] o = {"Yes!", "No, I want to quit the game."};
+		jOptionNumber = JOptionPane.showOptionDialog(null, "Game Over! You ran out of moves! New Game?",
+				"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
+		
+		reset(jOptionNumber);
+	}
+	
+	public void reset(int jOptionNumber) {
 		if(jOptionNumber == JOptionPane.YES_OPTION){
 			if(timed == true){
 				resetGame(1);
@@ -202,8 +246,7 @@ public class SumFunController {
 			}
 		}
 		else if(jOptionNumber == JOptionPane.NO_OPTION)
-			System.exit(0);		
-		
+			System.exit(0);	
 	}
 	
 }

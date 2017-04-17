@@ -5,10 +5,13 @@ import java.awt.GridLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import model.FileHandler;
 
 public class HighScoreBoard extends JFrame{
 	private JPanel pnlMain;
@@ -18,16 +21,17 @@ public class HighScoreBoard extends JFrame{
 	
 	private JLabel lblTitle;
 	private JLabel[] lblName;
-	private JLabel[] lblMoves;
-	private JLabel[] lblTimeLeft;
+	private JLabel[] lblExtra;
 	private JLabel[] lblScore;
 	
 	private final String TIMED_FILE = "TimedHighScores.txt";
 	private final String UNTIMED_FILE = "UntimedHighScores.txt";
+	
+	private FileHandler fileHandler;
 		
 	//The version argument should either be 0 or 1.  This will determine
 	//which view needs to be shown.
-	public HighScoreBoard(int version) {
+	public HighScoreBoard(String version) {
 		pnlMain = new JPanel();
 		pnlCenter = new JPanel();
 		pnlTop = new JPanel();
@@ -35,9 +39,10 @@ public class HighScoreBoard extends JFrame{
 		
 		lblTitle = new JLabel("Highscores");
 		lblName = new JLabel[10];
-		lblMoves = new JLabel[10];
-		lblTimeLeft = new JLabel[10];
+		lblExtra = new JLabel[10];
 		lblScore = new JLabel[10];
+		
+		fileHandler = new FileHandler();
 		
 		BorderLayout bl = new BorderLayout();
 		pnlMain.setLayout(bl);
@@ -45,28 +50,16 @@ public class HighScoreBoard extends JFrame{
 		GridLayout gl = new GridLayout(10,3);
 		pnlCenter.setLayout(gl);
 		
-		if (version == 1) {
-			for (int i = 0; i < 10; i++) {
-				lblName[i] = new JLabel();
-				lblTimeLeft[i] = new JLabel();
-				lblScore[i] = new JLabel();
-				pnlCenter.add(lblName[i]);
-				pnlCenter.add(lblTimeLeft[i]);
-				pnlCenter.add(lblScore[i]);
-			}
-			generateTimedView();
-
-		} else {
-			for (int i = 0; i < 10; i++) {
-				lblName[i] = new JLabel();
-				lblMoves[i] = new JLabel();
-				lblScore[i] = new JLabel();
-				pnlCenter.add(lblName[i]);
-				pnlCenter.add(lblMoves[i]);
-				pnlCenter.add(lblScore[i]);
-			}
-			generateUntimedView();
+		for (int i = 0; i < 10; i++) {
+			lblName[i] = new JLabel();
+			lblExtra[i] = new JLabel();
+			lblScore[i] = new JLabel();
+			pnlCenter.add(lblName[i]);
+			pnlCenter.add(lblExtra[i]);
+			pnlCenter.add(lblScore[i]);
 		}
+		
+		generateView(version);
 		
 		pnlTop.add(lblTitle, SwingConstants.CENTER);
 		pnlMain.add(pnlCenter);
@@ -75,55 +68,34 @@ public class HighScoreBoard extends JFrame{
 		add(pnlMain);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
-		setVisible(true);
 	}
 	
-	private String[][] getScores(String fileName) {
-		File file = new File(fileName);
-		Scanner input = null;
+	public void generateView(String version) {
 		
-		try {
-			input = new Scanner(file);
-		} catch (FileNotFoundException ex) {
-			System.out.println(ex);
+		String[][] scores;
+		if (version.equals("Timed")) {
+			scores = fileHandler.getScores(TIMED_FILE);
+		} else {
+			scores = fileHandler.getScores(UNTIMED_FILE);
 		}
 		
-		String[][] scores = new String[10][];
-		int counter = 0;
-		
-		while (input.hasNext()) {
-			String line = input.nextLine();
-			String[] info = line.split(",");
-			scores[counter] = info;
-			counter++;
-		}
-		
-		return scores;
-	}
-	
-	private void generateTimedView() {
-		String[][] scores = getScores(TIMED_FILE);
+		clearScoreBoard();
 		
 		int i = 0;
 		
 		while (scores[i] != null) {
 			lblName[i].setText(scores[i][0]);
-			lblTimeLeft[i].setText(scores[i][1]);
+			lblExtra[i].setText(scores[i][1]);
 			lblScore[i].setText(scores[i][2]);
 			i++;
 		}
 	}
 	
-	private void generateUntimedView() {
-		String[][] scores = getScores(UNTIMED_FILE);
-		
-		int i = 0;
-		
-		while (scores[i] != null) {
-			lblName[i].setText(scores[i][0]);
-			lblMoves[i].setText(scores[i][1]);
-			lblScore[i].setText(scores[i][2]);
-			i++;
+	private void clearScoreBoard() {
+		for (int i = 0; i < 10; i++) {
+			lblName[i].setText("");
+			lblExtra[i].setText("");
+			lblScore[i].setText("");
 		}
 	}
 }

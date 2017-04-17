@@ -6,16 +6,18 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
+import controller.SumFunController;
+
 public class TimedGamemode extends Gamemode {
 
 	private static TimedGamemode gamemode;
 	private JLabel lblTimer;
 	private int timeLeft;
-	Timer timer;
+	private static SumFunController controller;
+	private Timer timer;
 	
 	private TimedGamemode() {
 		super();
-		timeLeft = 300;
 		timer = new Timer(1000, new UpdateTime());
 	}
 
@@ -26,7 +28,12 @@ public class TimedGamemode extends Gamemode {
 		 return gamemode;
 	}
 	
+	public void setController(SumFunController controller) {
+		this.controller = controller;
+	}
+	
 	public void startTime(JLabel lblTimer) {
+		timeLeft = 300;
 		this.lblTimer = lblTimer;
 		timer.start();
 	}
@@ -34,18 +41,43 @@ public class TimedGamemode extends Gamemode {
 	private String convertToString() {
 		int minutes = timeLeft / 60;
 		int seconds = timeLeft % 60;
-		return minutes + ":" + seconds;
+		
+		String time = "";
+		
+		if (seconds < 10) {
+			time = minutes + ":0" + seconds;
+		} else {
+			time = minutes + ":" + seconds;
+		}
+		return time;
 	}
 	
 	private class UpdateTime implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			lblTimer.setText(convertToString());
-			timeLeft--;
 			
+			if (timeLeft != -1) {
+				lblTimer.setText(convertToString());
+				timeLeft--;
+			} else {
+				controller.gameOver("Game Over! You ran out of time! New Game?");
+			}
+				
 		}
 		
+	}
+	
+	public void stopTimer() {
+		timer.stop();
+	}
+	
+	public String getTime() {
+		return convertToString();
+	}
+	
+	public void setTime(int time) {
+		timeLeft = time;
 	}
 	
 }
