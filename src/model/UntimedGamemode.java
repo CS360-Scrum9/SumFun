@@ -9,8 +9,9 @@ public class UntimedGamemode extends Gamemode {
 	}
 
 	public UntimedGamemode getGamemode() {
-		 if (gamemode == null)
+		 if (gamemode == null) {
 			 gamemode = new UntimedGamemode();
+		 }
 		 return gamemode;
 	}
 }

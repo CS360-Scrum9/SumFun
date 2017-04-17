@@ -17,13 +17,14 @@ public class Queue {
 	}
 	
 	public void ensureCapacity(int minimumCapacity) {
-	      int biggerArray[ ];
-	      int n1, n2;
-	      if ( tileQueue.length >= minimumCapacity ) // No change needed
+	      int[] biggerArray;
+	      int n1;
+	      int n2;
+	      if ( tileQueue.length >= minimumCapacity ) {// No change needed
 	         return;
-	      else if ( manyItems == 0 )   // Just increase the capacity ignoring array elements
+	      } else if ( manyItems == 0 ) {   // Just increase the capacity ignoring array elements
 	         tileQueue = new int[ minimumCapacity ];
-	      else if ( front <= rear ) {                            // Create larger array and shift the data
+	      } else if ( front <= rear ) {                            // Create larger array and shift the data
 	         biggerArray = new int[ minimumCapacity ];
 	         System.arraycopy(tileQueue, front, biggerArray, front, manyItems);
 	         tileQueue = biggerArray;
@@ -40,8 +41,9 @@ public class Queue {
 	}
 	
 	public void enqueue(int item) {
-		if (manyItems == tileQueue.length) 
+		if (manyItems == tileQueue.length) {
 			ensureCapacity(manyItems * 2 + 1);
+		}
 		if (manyItems == 0) {
 			front = 0;
 			rear = 0;
@@ -56,8 +58,9 @@ public class Queue {
 	public int dequeue() {
 		int answer;
 		
-		if (manyItems == 0) 
+		if (manyItems == 0)  {
 			throw new NoSuchElementException("Queue underflow");
+		}
 		answer = tileQueue[front];
 		front = nextIndex(front);
 		manyItems--;

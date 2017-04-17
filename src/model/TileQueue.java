@@ -6,7 +6,8 @@ import java.util.Random;
 public class TileQueue extends Observable{
 	
 	private Queue tileQueue;
-	private int queueSize = 500, currentQueueSize = 10;
+	private int queueSize = 500;
+	private int currentQueueSize = 10;
 	private int[] currentQueue;
 	private boolean enableRefresh;
 	
@@ -21,20 +22,23 @@ public class TileQueue extends Observable{
 		currentQueue = new int[currentQueueSize];
 		Random rand = new Random();
 		
-		for(int i = 0; i < queueSize; i++)
+		for(int i = 0; i < queueSize; i++) {
 			tileQueue.enqueue(rand.nextInt(10));
+		}
 	
 		
-		for(int i = 4; i >= 0; i--)
+		for(int i = 4; i >= 0; i--) {
 			currentQueue[i]=tileQueue.dequeue();
+		}
 		
 		setChanged();
 		notifyObservers();
 	}
 	
 	public void dequeue(){
-		for(int i = 4; i > 0; i--)
+		for(int i = 4; i > 0; i--) {
 			currentQueue[i] = currentQueue[i-1];
+		}
 		
 		currentQueue[0] = tileQueue.dequeue();
 		setChanged();

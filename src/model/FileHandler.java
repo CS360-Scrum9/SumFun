@@ -8,17 +8,17 @@ import java.util.Scanner;
 
 public class FileHandler {
 	
-	private final String TIMED_FILE = "TimedHighScores.txt";
-	private final String UNTIMED_FILE = "UntimedHighScores.txt";
+	private final String timedFile = "TimedHighScores.txt";
+	private final String untimedFile = "UntimedHighScores.txt";
 	
 	public boolean isHighScore(int score, boolean timed) {
 		boolean isHighScore = false;
 		String fileName;
 		
 		if (timed) {
-			fileName = TIMED_FILE;
+			fileName = timedFile;
 		} else {
-			fileName = UNTIMED_FILE;
+			fileName = untimedFile;
 		}
 		
 		String[][] scores = getScores(fileName);
@@ -41,9 +41,9 @@ public class FileHandler {
 		
 		
 		if (timed) {
-			fileName = TIMED_FILE;
+			fileName = timedFile;
 		} else {
-			fileName = UNTIMED_FILE;
+			fileName = untimedFile;
 		}
 		
 		int index = 0;

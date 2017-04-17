@@ -4,7 +4,8 @@ import java.util.Observable;
 
 public class MoveCounter extends Observable{
 	
-	private int moveCount, tileCount;
+	private int moveCount;
+	private int tileCount;
 
 	public MoveCounter(){
 		moveCount = 50;

@@ -7,7 +7,9 @@ import javax.swing.JButton;
 
 public class Tile extends JButton{
 
-	private int number, row, column;
+	private int number;
+	private int row;
+	private int column;
 	private boolean isOccupied;
 	
 	// Constructor
@@ -24,8 +26,7 @@ public class Tile extends JButton{
 		if (row > 1 && row < 9 && column > 1 && column < 9){
 			setOccupied(true);
 			setNumber(rand.nextInt(10));
-		}
-		else{
+		} else {
 			setOccupied(false);
 			setNumber(0);
 		}

@@ -24,8 +24,8 @@ public class HighScoreBoard extends JFrame{
 	private JLabel[] lblExtra;
 	private JLabel[] lblScore;
 	
-	private final String TIMED_FILE = "TimedHighScores.txt";
-	private final String UNTIMED_FILE = "UntimedHighScores.txt";
+	private final String timedFile = "TimedHighScores.txt";
+	private final String untimedFile = "UntimedHighScores.txt";
 	
 	private FileHandler fileHandler;
 		
@@ -74,9 +74,9 @@ public class HighScoreBoard extends JFrame{
 		
 		String[][] scores;
 		if (version.equals("Timed")) {
-			scores = fileHandler.getScores(TIMED_FILE);
+			scores = fileHandler.getScores(timedFile);
 		} else {
-			scores = fileHandler.getScores(UNTIMED_FILE);
+			scores = fileHandler.getScores(untimedFile);
 		}
 		
 		clearScoreBoard();

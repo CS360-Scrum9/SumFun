@@ -48,7 +48,8 @@ public class SumFunController {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int row, column;
+			int row; 
+			int column;
 			Tile tile = (Tile) e.getSource();
 			row = tile.getRow();
 			column = tile.getColumn();
@@ -64,7 +65,6 @@ public class SumFunController {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JButton qRefresh = (JButton) e.getSource();
 			tileQ.reset();
 			tileQ.setRefreshIsEnabled(false);
 		}
@@ -75,13 +75,14 @@ public class SumFunController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand().equals("New")){
-				if(timed == true)
+				if(timed == true) {
 					resetGame(1);
-				else
+				} else {
 					resetGame(0);
-			}
-			else
+				}
+			} else {
 				System.exit(0);
+			}
 		}
 	}
 	
@@ -89,10 +90,11 @@ public class SumFunController {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(e.getActionCommand().equals("Timed"))
+			if(e.getActionCommand().equals("Timed")) {
 				timed = true;
-			else
+			} else {
 				timed = false;
+			}
 		}
 	}
 	
@@ -104,15 +106,18 @@ public class SumFunController {
 	 * @return Boolean saying if the move was successful.
 	 */
 	public boolean checkNeighbors(ObservableTile tile, int qValue){
-		int row, column, sum = 0;
+		int row = 0;
+		int column = 0;
+		int sum = 0;
 		row = tile.getRow();
 		column = tile.getColumn();
 
 		//Add the numbers from all surrounding tiles
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
-				if(i != 0 || j != 0)
+				if(i != 0 || j != 0) {
 					sum += tiles[row+i][column+j].getNumber();
+				}
 			}
 		}
 		return sum%10 == qValue;
@@ -125,13 +130,17 @@ public class SumFunController {
 	 * @param tile The tile whose neighbors will be reset.
 	 */
 	public void resetNeighbors(ObservableTile tile){
-		int row, column, count = 0, newScore;
+		int row = 0;
+		int column = 0;
+		int count = 0; 
+		int newScore;
 		row = tile.getRow();
 		column = tile.getColumn();
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
-				if(!(i == 0 && j == 0) && tiles[row+i][column+j].isOccupied())
+				if(!(i == 0 && j == 0) && tiles[row+i][column+j].isOccupied()) {
 					count++;
+				}
 				tiles[row + i][column + j].setOccupied(false);
 				tiles[row+i][column+j].setNumber(0);
 			}
@@ -150,9 +159,9 @@ public class SumFunController {
 	 * @param qValue The value of the next tile in queue to be placed.
 	 */
 	public void placeTile(ObservableTile tile, int qValue){
-		if(checkNeighbors(tile, qValue))
+		if(checkNeighbors(tile, qValue)) {
 			resetNeighbors(tile);
-		 else{ 
+		} else { 
 			tile.setOccupied(true);
 			tile.setNumber(qValue);
 			mc.setTileCount(mc.getTileCount() + 1);
@@ -180,15 +189,13 @@ public class SumFunController {
 	}
 	
 	private void checkGameOver(){
-		int jOptionNumber = 10;
+		int optionNumber = 10;
 		
 		tileQ.dequeue();
 		
 		if(mc.getTileCount() >= 81){
 			gameOver("Game Over! All tiles are occupied! New Game?");
-		}
-		
-		else if(mc.getTileCount() <= 0){
+		} else if(mc.getTileCount() <= 0){
 			
 			if (timed) {
 				gamemode.stopTimer();
@@ -209,7 +216,7 @@ public class SumFunController {
 			}
 			
 			Object[] o = {"Yes!", "No, I want to quit the game."};
-			jOptionNumber = JOptionPane.showOptionDialog(null, "Congratulations! You win! New Game?",
+			optionNumber = JOptionPane.showOptionDialog(null, "Congratulations! You win! New Game?",
 					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, o, o[1]);
 			
 		}
@@ -222,31 +229,30 @@ public class SumFunController {
 			}
 		}
 		
-		reset(jOptionNumber);
+		reset(optionNumber);
 		
 	}
 	
 	public void gameOver(String message) {
-		int jOptionNumber;
+		int optionNumber;
 		
 		Object[] o = {"Yes!", "No, I want to quit the game."};
-		jOptionNumber = JOptionPane.showOptionDialog(null, "Game Over! You ran out of moves! New Game?",
+		optionNumber = JOptionPane.showOptionDialog(null, "Game Over! You ran out of moves! New Game?",
 				"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
 		
-		reset(jOptionNumber);
+		reset(optionNumber);
 	}
 	
-	public void reset(int jOptionNumber) {
-		if(jOptionNumber == JOptionPane.YES_OPTION){
+	public void reset(int optionNumber) {
+		if(optionNumber == JOptionPane.YES_OPTION){
 			if(timed == true){
 				resetGame(1);
-			}
-			else{
+			} else{
 				resetGame(0);
 			}
-		}
-		else if(jOptionNumber == JOptionPane.NO_OPTION)
+		} else if(optionNumber == JOptionPane.NO_OPTION) {
 			System.exit(0);	
+		}
 	}
 	
 }

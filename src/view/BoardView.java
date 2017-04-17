@@ -19,7 +19,7 @@ public class BoardView extends JFrame implements Observer{
 	private JPanel pnlNorth;
 	// private JPanel pnlWest;
 	
-	private JButton qRefresh;
+	private JButton queueRefresh;
 	
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
@@ -30,8 +30,8 @@ public class BoardView extends JFrame implements Observer{
 	
 	private ButtonGroup buttonGroup;
 	
-	private JLabel[] qTiles;
-	private JLabel qTitle;
+	private JLabel[] queueTiles;
+	private JLabel queueTitle;
 	private JLabel scoreLabel;
 	private JLabel lblCounter;
 	private JLabel lblMoveCounter;
@@ -86,8 +86,9 @@ public class BoardView extends JFrame implements Observer{
 			for (int j = 0; j < 11; j++) {
 				tileButtons[i][j] = tiles[i][j].getTile();
 				tiles[i][j].addObserver(this);
-				if(tiles[i][j].isOccupied())
+				if(tiles[i][j].isOccupied()) {
 					tileButtons[i][j].setText("" + tiles[i][j].getNumber());
+				}
 				if(i > 0 && i < 10 && j > 0 && j < 10){
 					pnlGrid.add(tileButtons[i][j]);
 				}
@@ -102,19 +103,19 @@ public class BoardView extends JFrame implements Observer{
 		// pnlWest.add(scoreLabel);
 		
 		//Add the queue tiles to the queue panel
-		qRefresh = new JButton("<html>Refresh<br>Queue</html>");
-		qTiles = new JLabel[5];
-		qTitle = new JLabel("Queue");
-		pnlQueue.add(qTitle);
+		queueRefresh = new JButton("<html>Refresh<br>Queue</html>");
+		queueTiles = new JLabel[5];
+		queueTitle = new JLabel("Queue");
+		pnlQueue.add(queueTitle);
 		
 		for(int i = 4; i >= 0; i--){
-			qTiles[i] = new JLabel("", SwingConstants.CENTER);
-			pnlQueue.add(qTiles[i]);
+			queueTiles[i] = new JLabel("", SwingConstants.CENTER);
+			pnlQueue.add(queueTiles[i]);
 		}
 		
-		pnlQueue.add(qRefresh);
-		qTiles[4].setOpaque(true);
-		qTiles[4].setBackground(Color.GREEN);
+		pnlQueue.add(queueRefresh);
+		queueTiles[4].setOpaque(true);
+		queueTiles[4].setBackground(Color.GREEN);
 		updateQueue();
 		
 		menuBar = new JMenuBar();
@@ -173,8 +174,7 @@ public class BoardView extends JFrame implements Observer{
 			this.add(pnlNorth, BorderLayout.NORTH);
 			timedMode = TimedGamemode.getGamemode();
 			timedMode.startTime(lblCountdown);
-		}
-		else{
+		} else{
 			this.remove(pnlNorth);
 			pnlNorth = new JPanel();
 			pnlNorth.setLayout(new GridLayout(1, 3));
@@ -188,14 +188,15 @@ public class BoardView extends JFrame implements Observer{
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		if(arg0 == this.score)
+		if(arg0 == this.score) {
 			updateScore();
-		else if(arg0 == this.tileQ)
+		} else if(arg0 == this.tileQ) { 
 			updateQueue();
-		else if(arg0 == this.mc)
+		} else if(arg0 == this.mc) { 
 			updateMoveCounter();
-		else
+		} else { 
 			updateTile(arg0);
+		}
 		
 	}
 	
@@ -204,29 +205,30 @@ public class BoardView extends JFrame implements Observer{
 	}
 	
 	private void updateTile(Observable arg0){
-		int row, column;
+		int row;
+		int column;
 		ObservableTile tile = (ObservableTile) arg0;
 		row = tile.getRow();
 		column = tile.getColumn();
 		
 		if(tile.isOccupied()){
 			tileButtons[row][column].setText("" + tile.getNumber());
-		}
-		else{
+		} else{
 			tileButtons[row][column].setText("");
 		}
 	}
 	
 	private void updateQueue(){	
 		int[] currentQ = tileQ.getCurrentQueue();
-		for(int i = 4; i >= 0; i--)
-			qTiles[i].setText("" + currentQ[i]);
+		for(int i = 4; i >= 0; i--) {
+			queueTiles[i].setText("" + currentQ[i]);
+		}
 		
 		if(tileQ.refreshIsEnabled()){
-			qRefresh.setEnabled(true);
+			queueRefresh.setEnabled(true);
+		} else {
+			queueRefresh.setEnabled(false);
 		}
-		else
-			qRefresh.setEnabled(false);
 	}
 	
 	private void updateMoveCounter(){
@@ -235,13 +237,14 @@ public class BoardView extends JFrame implements Observer{
 	
 	public void addTileButtonHandler(ActionListener al){
 		for(int i = 1; i < 10; i++){
-			for(int j = 1; j < 10; j++)
+			for(int j = 1; j < 10; j++) {
 				tileButtons[i][j].addActionListener(al);
+			}
 		}
 	}
 	
 	public void addRefreshButtonHandler(ActionListener al){
-		qRefresh.addActionListener(al);
+		queueRefresh.addActionListener(al);
 	}
 	
 	public void addMenuItemListener(ActionListener al){
