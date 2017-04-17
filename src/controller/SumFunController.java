@@ -182,7 +182,7 @@ public class SumFunController {
 		highScoreBoard.setVisible(false);
 		
 		if (version == 1) {
-			gamemode.setTime(500);
+			gamemode.setTime(300);
 		} else {
 			mc.setMoveCount(50);
 		}
