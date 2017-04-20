@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -110,12 +111,16 @@ public class BoardView extends JFrame implements Observer{
 		
 		for(int i = 4; i >= 0; i--){
 			queueTiles[i] = new JLabel("", SwingConstants.CENTER);
+			if(i==4){
+				queueTiles[i].setFont(new Font(queueTiles[i].getFont().getFontName(), Font.BOLD, 36));
+			} else {
+				queueTiles[i].setFont(new Font(queueTiles[i].getFont().getFontName(), Font.PLAIN, 12));
+			}
 			pnlQueue.add(queueTiles[i]);
 		}
 		
 		pnlQueue.add(queueRefresh);
 		queueTiles[4].setOpaque(true);
-		queueTiles[4].setBackground(Color.GREEN);
 		updateQueue();
 		
 		menuBar = new JMenuBar();
