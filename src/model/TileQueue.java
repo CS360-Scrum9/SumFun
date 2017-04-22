@@ -17,8 +17,9 @@ public class TileQueue extends Observable{
 	}
 	
 	public static TileQueue getInstance(){
-		if(tileQ == null)
+		if(tileQ == null){
 			tileQ = new TileQueue();
+		}
 		return tileQ;
 	}
 	

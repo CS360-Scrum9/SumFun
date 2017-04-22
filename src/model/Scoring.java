@@ -12,8 +12,9 @@ import java.util.Observable;
 		}
 		
 		public static Scoring getInstance(){
-			if(score == null)
+			if(score == null){
 				score = new Scoring();
+			}
 			return score;
 		}
 		

@@ -17,6 +17,21 @@ public class ObservableTile extends Observable {
 	}
 
 	// region: Getter and Setter methods.
+	
+	public void startFlash(){
+		tile.setFlash(true);
+		setChanged();
+		notifyObservers();
+	}
+	
+	public void stopFlash(){
+		tile.setFlash(false);
+	}
+	
+	public boolean doFlash(){
+		return tile.doFlash();
+	}
+	
 	public Tile getTile(){
 		return tile;
 	}

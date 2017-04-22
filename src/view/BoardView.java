@@ -3,23 +3,42 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.*;
-import model.*;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
+
+import model.MoveCounter;
+import model.ObservableTile;
+import model.Scoring;
+import model.Tile;
+import model.TileQueue;
+import model.TimedGamemode;
 
 public class BoardView extends JFrame implements Observer{
 	
 	
-	// private JPanel pnlMain;
 	private JPanel pnlGrid;
 	private JPanel pnlQueue;
 	private JPanel pnlNorth;
-	// private JPanel pnlWest;
+	private JPanel pnlSouth;
 	
 	private JButton queueRefresh;
+	private JButton hintButton;
 	
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
@@ -44,6 +63,9 @@ public class BoardView extends JFrame implements Observer{
 	private Tile[][] tileButtons;
 	private MoveCounter mc;
 	private TimedGamemode timedMode;
+	private Timer time;
+	private boolean stopTime;
+	private int hintCount;
 	
 	
 	
@@ -66,18 +88,16 @@ public class BoardView extends JFrame implements Observer{
 		lblTimer = new JLabel("Time Left:  ", SwingConstants.CENTER);
 		lblCountdown = new JLabel("5:00", SwingConstants.CENTER);
 		
-		// pnlMain = new JPanel();
+	
 		pnlGrid = new JPanel();
 		pnlQueue = new JPanel();
 		pnlNorth = new JPanel();
-		// pnlWest = new JPanel();
-		
-		// gl = new GridLayout(1,1);
-		// pnlWest.setLayout(gl);
+		pnlSouth = new JPanel();
 		
 		pnlGrid.setLayout(new GridLayout(9, 9));
 		pnlNorth.setLayout(new GridLayout(1, 3));
 		pnlQueue.setLayout(new GridLayout(7, 1));
+		pnlSouth.setLayout(new GridLayout(1, 4));
 		
 		tileButtons = new Tile[11][11];
 		
@@ -100,9 +120,8 @@ public class BoardView extends JFrame implements Observer{
 		pnlNorth.add(lblCounter);
 		pnlNorth.add(lblMoveCounter);
 		pnlNorth.add(scoreLabel);
-		// pnlWest.add(scoreLabel);
 		
-		//Add the queue tiles to the queue panel
+		
 		queueRefresh = new JButton("<html>Refresh<br>Queue</html>");
 		queueTiles = new JLabel[5];
 		queueTitle = new JLabel("Queue");
@@ -117,6 +136,10 @@ public class BoardView extends JFrame implements Observer{
 		queueTiles[4].setOpaque(true);
 		queueTiles[4].setBackground(Color.GREEN);
 		updateQueue();
+		
+		hintCount = 3;
+		hintButton = new JButton("Hint (" + hintCount + ")");
+		pnlSouth.add(hintButton);
 		
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
@@ -155,12 +178,13 @@ public class BoardView extends JFrame implements Observer{
 	    
 	    
 		
-		//Add the panels to the frame
+		
 		this.add(pnlGrid, BorderLayout.CENTER);
 		this.add(pnlNorth, BorderLayout.NORTH);
 		this.add(pnlQueue, BorderLayout.EAST);
+		this.add(pnlSouth, BorderLayout.SOUTH);
 		this.setJMenuBar(menuBar);
-		// this.add(pnlWest, BorderLayout.WEST);
+
 	}
 	
 	public void switchGameModeView(int version){
@@ -205,6 +229,7 @@ public class BoardView extends JFrame implements Observer{
 	}
 	
 	private void updateTile(Observable arg0){
+		stopTime = true;
 		int row;
 		int column;
 		ObservableTile tile = (ObservableTile) arg0;
@@ -215,6 +240,17 @@ public class BoardView extends JFrame implements Observer{
 			tileButtons[row][column].setText("" + tile.getNumber());
 		} else{
 			tileButtons[row][column].setText("");
+		}
+		
+		if(tile.doFlash()){
+			time = new Timer(400, new FlashListener(tileButtons[row][column], Color.YELLOW));
+			stopTime = false;
+			time.start();
+			hintCount--;
+			hintButton.setText("Hint (" + hintCount + ")");
+			if(hintCount < 1){
+				hintButton.setEnabled(false);
+			}
 		}
 	}
 	
@@ -233,6 +269,33 @@ public class BoardView extends JFrame implements Observer{
 	
 	private void updateMoveCounter(){
 		lblMoveCounter.setText("" + mc.getMoveCount());
+	}
+	
+	private class FlashListener implements ActionListener {
+	    JButton button;
+        Color color;
+        Color originalColor;
+        int count;
+		
+		public FlashListener( JButton button, Color color ) {
+	            this.button = button;
+	            this.color = color;
+	            this.originalColor = button.getBackground();
+		}
+		public void actionPerformed(ActionEvent e) {
+			 if(stopTime){
+				  button.setBackground( originalColor );
+     	       	((Timer) e.getSource()).stop(); 
+			 }else{
+				 if( button.getBackground().equals( originalColor ) ) {
+					 button.setBackground( color);
+	              
+	               
+				 }else {
+					 button.setBackground( originalColor );
+	               }
+			 }
+		 }
 	}
 	
 	public void addTileButtonHandler(ActionListener al){
@@ -257,4 +320,7 @@ public class BoardView extends JFrame implements Observer{
 		timedItem.addActionListener(al);
 	}
 
+	public void addHintButtonHandler(ActionListener al){
+		hintButton.addActionListener(al);
+	}
 }

@@ -2,11 +2,18 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.FileHandler;
 
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-import model.*;
+import model.MoveCounter;
+import model.ObservableTile;
+import model.Scoring;
+import model.Tile;
+import model.TileQueue;
+import model.TimedGamemode;
+
 import view.BoardView;
 import view.HighScoreBoard;
 
@@ -21,18 +28,23 @@ public class SumFunController {
 	private FileHandler fileHandler;
 	private TimedGamemode gamemode;
 	private boolean timed;
+	private boolean clearTilesUsed;
+	private int neighborCount;
+	private int hintCount;
 	
 	public SumFunController(){}
 	
 	public SumFunController(Scoring score, TileQueue tileQ, 
-			ObservableTile[][] tiles, MoveCounter mc, BoardView board, HighScoreBoard highScoreBoard){
+			ObservableTile[][] tiles, MoveCounter mc, BoardView board, HighScoreBoard highScoreBoard) throws SecurityException, IOException{
 		this.score = score;
 		this.tileQ = tileQ;
 		this.tiles = tiles;
 		this.board = board; 
 		this.mc = mc;
 		
+		hintCount = 3;
 		timed = false;
+		clearTilesUsed = false;
 		fileHandler = new FileHandler();
 		
 		gamemode = TimedGamemode.getGamemode();
@@ -42,6 +54,7 @@ public class SumFunController {
 		board.addRefreshButtonHandler(new RefreshButtonHandler());
 		board.addRadioButtonListener(new RadioButtonListener());
 		board.addMenuItemListener(new MenuItemListener());
+		board.addHintButtonHandler(new HintButtonHandler());
 	}
 
 	private class TileButtonHandler implements ActionListener {
@@ -57,6 +70,8 @@ public class SumFunController {
 			if(!tile.isOccupied()){
 				placeTile(tiles[row][column], tileQ.getNextValue());
 				checkGameOver(); 
+			}else if(clearTilesUsed == false){
+				clearAllTilesWithNumber(tile.getNumber());
 			}
 		}	
 	}
@@ -67,6 +82,17 @@ public class SumFunController {
 		public void actionPerformed(ActionEvent e) {
 			tileQ.reset();
 			tileQ.setRefreshIsEnabled(false);
+		}
+	}
+	
+	private class HintButtonHandler implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(hintCount > 0){
+				hintCount--;
+				useHint();
+			}
 		}
 	}
 	
@@ -105,22 +131,24 @@ public class SumFunController {
 	 * @param tile The origin tile whose neighbors are to be checked.
 	 * @return Boolean saying if the move was successful.
 	 */
-	public boolean checkNeighbors(ObservableTile tile, int qValue){
+	public boolean checkNeighbors(ObservableTile tile, int queueValue){
 		int row = 0;
 		int column = 0;
 		int sum = 0;
+		neighborCount = 0;
 		row = tile.getRow();
 		column = tile.getColumn();
 
 		//Add the numbers from all surrounding tiles
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
-				if(i != 0 || j != 0) {
+				if(!(i == 0 && j == 0) && tiles[row+i][column+j].isOccupied()) {
+					neighborCount++;
 					sum += tiles[row+i][column+j].getNumber();
 				}
 			}
 		}
-		return sum%10 == qValue;
+		return sum%10 == queueValue;
 	}
 	
 	/**
@@ -132,22 +160,18 @@ public class SumFunController {
 	public void resetNeighbors(ObservableTile tile){
 		int row = 0;
 		int column = 0;
-		int count = 0; 
 		int newScore;
 		row = tile.getRow();
 		column = tile.getColumn();
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
-				if(!(i == 0 && j == 0) && tiles[row+i][column+j].isOccupied()) {
-					count++;
-				}
 				tiles[row + i][column + j].setOccupied(false);
 				tiles[row+i][column+j].setNumber(0);
 			}
 		}
-		mc.setTileCount(mc.getTileCount() - count);
-		if(count >= 3){
-			newScore = score.getScore() + count * 10;
+		mc.setTileCount(mc.getTileCount() - neighborCount);
+		if(neighborCount >= 3){
+			newScore = score.getScore() + neighborCount * 10;
 			score.setScore(newScore);
 		}
 	}
@@ -158,12 +182,12 @@ public class SumFunController {
 	 * @param tile Where the player is trying to place the tile.
 	 * @param qValue The value of the next tile in queue to be placed.
 	 */
-	public void placeTile(ObservableTile tile, int qValue){
-		if(checkNeighbors(tile, qValue)) {
+	public void placeTile(ObservableTile tile, int queueValue){
+		if(checkNeighbors(tile, queueValue)) {
 			resetNeighbors(tile);
 		} else { 
 			tile.setOccupied(true);
-			tile.setNumber(qValue);
+			tile.setNumber(queueValue);
 			mc.setTileCount(mc.getTileCount() + 1);
 		 }
 	}
@@ -180,6 +204,7 @@ public class SumFunController {
 		score.setScore(0);
 		board.switchGameModeView(version);
 		highScoreBoard.setVisible(false);
+		clearTilesUsed = false;
 		
 		if (version == 1) {
 			gamemode.setTime(300);
@@ -193,14 +218,14 @@ public class SumFunController {
 		
 		tileQ.dequeue();
 		
-		if(mc.getTileCount() >= 81){
-			gameOver("Game Over! All tiles are occupied! New Game?");
+		if(mc.getTileCount() >= 81 && clearTilesUsed == true){
+			gameOver("Game Over! All tiles are occupied! New Game?", JOptionPane.ERROR_MESSAGE);
 		} else if(mc.getTileCount() <= 0){
 			
 			if (timed) {
 				gamemode.stopTimer();
 			}
-			if (fileHandler.isHighScore(score.getScore(), timed)) {
+			/*if (( fileHandler).isHighScore(score.getScore(), timed)) {
 				String name = JOptionPane.showInputDialog(null, "Congratulations! New High Score!  Please enter your name");
 				if (timed) {
 					fileHandler.addScore(name, gamemode.getTime(), score.getScore(), timed);
@@ -213,11 +238,9 @@ public class SumFunController {
 					highScoreBoard.generateView("Untimed");
 				}
 				highScoreBoard.setVisible(true);
-			}
+			}*/
 			
-			Object[] o = {"Yes!", "No, I want to quit the game."};
-			optionNumber = JOptionPane.showOptionDialog(null, "Congratulations! You win! New Game?",
-					"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, o, o[1]);
+			gameOver("Congratulations! You win! New Game?", JOptionPane.PLAIN_MESSAGE);
 			
 		}
 		
@@ -225,7 +248,7 @@ public class SumFunController {
 			mc.decrementCount();
 			
 			if(mc.getMoveCount() <= 0){
-				gameOver("Game Over! You ran out of moves! New Game?");
+				gameOver("Game Over! You ran out of moves! New Game?", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		
@@ -233,12 +256,12 @@ public class SumFunController {
 		
 	}
 	
-	public void gameOver(String message) {
+	public void gameOver(String message, int icon) {
 		int optionNumber;
 		
 		Object[] o = {"Yes!", "No, I want to quit the game."};
-		optionNumber = JOptionPane.showOptionDialog(null, "Game Over! You ran out of moves! New Game?",
-				"Sum Fun", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, o, o[1]);
+		optionNumber = JOptionPane.showOptionDialog(null, message,
+				"Sum Fun", JOptionPane.YES_NO_OPTION, icon, null, o, o[1]);
 		
 		reset(optionNumber);
 	}
@@ -255,4 +278,42 @@ public class SumFunController {
 		}
 	}
 	
+	private void clearAllTilesWithNumber(int n){
+		for(int i = 1; i < 10; i++){
+			for(int j = 1; j < 10; j++){
+				if(tiles[i][j].getNumber() == n){
+					tiles[i][j].setOccupied(false);
+					tiles[i][j].setNumber(0);
+				}
+			}
+		}
+		clearTilesUsed = true;
+	}
+	
+	private ObservableTile useHint(){
+		ObservableTile tile = null;
+		neighborCount = 0;
+		int maxCount = 0;
+		int row = 0;
+		int column = 0;
+		for(int i = 1; i < 10; i++){
+			for(int j = 1; j < 10; j++){
+				if(!tiles[i][j].isOccupied() && checkNeighbors(tiles[i][j], tileQ.getNextValue())){
+					if(neighborCount > maxCount){
+						maxCount = neighborCount;
+						row = i;
+						column = j;
+					}
+				}
+			}
+		}
+		
+		if(maxCount > 0){
+			tile = tiles[row][column];
+			tiles[row][column].startFlash();
+			tiles[row][column].stopFlash();
+		}
+		System.out.println("row: " + row + " col: " + column + " number: " + tiles[row][column].getNumber() );
+		return tile;
+	}
 }

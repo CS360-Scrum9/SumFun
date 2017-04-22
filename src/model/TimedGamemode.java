@@ -1,12 +1,15 @@
 package model;
 
+import controller.SumFunController;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
-import controller.SumFunController;
+
 
 public class TimedGamemode extends Gamemode {
 
@@ -61,7 +64,7 @@ public class TimedGamemode extends Gamemode {
 				lblTimer.setText(convertToString());
 				timeLeft--;
 			} else {
-				controller.gameOver("Game Over! You ran out of time! New Game?");
+				controller.gameOver("Game Over! You ran out of time! New Game?", JOptionPane.ERROR_MESSAGE);
 			}
 				
 		}

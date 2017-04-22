@@ -11,6 +11,8 @@ public class FileHandler {
 	private final String timedFile = "TimedHighScores.txt";
 	private final String untimedFile = "UntimedHighScores.txt";
 	
+	public FileHandler(){}
+	
 	public boolean isHighScore(int score, boolean timed) {
 		boolean isHighScore = false;
 		String fileName;

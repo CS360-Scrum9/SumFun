@@ -14,8 +14,9 @@ public class MoveCounter extends Observable{
 	}
 
 	public static MoveCounter getInstance(){
-		if(mc == null)
+		if(mc == null){
 			mc = new MoveCounter();
+		}
 		return mc;
 	}
 	

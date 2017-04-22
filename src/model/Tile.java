@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Random;
 import javax.swing.JButton;
 
@@ -11,12 +9,14 @@ public class Tile extends JButton{
 	private int row;
 	private int column;
 	private boolean isOccupied;
+	private boolean flash;
 	
 	// Constructor
 	public Tile(int row, int column) {
 		this.row = row;
 		this.column = column;
 		this.isOccupied = false;
+		this.flash = false;
 		populateGrid();
 	}
 	
@@ -32,6 +32,13 @@ public class Tile extends JButton{
 		}
 	}
 	// region: Getter and Setter methods.
+	public void setFlash(boolean flash){
+		this.flash = flash;
+	}
+	public boolean doFlash(){
+		return this.flash;
+	}
+	
 	public int getNumber() {
 		return number;
 	}
