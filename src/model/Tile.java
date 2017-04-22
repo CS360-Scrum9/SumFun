@@ -5,6 +5,10 @@ import javax.swing.JButton;
 
 public class Tile extends JButton{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4L;
 	private int number;
 	private int row;
 	private int column;

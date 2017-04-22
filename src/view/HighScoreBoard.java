@@ -14,10 +14,13 @@ import javax.swing.SwingConstants;
 import model.FileHandler;
 
 public class HighScoreBoard extends JFrame{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2L;
 	private JPanel pnlMain;
 	private JPanel pnlCenter;
 	private JPanel pnlTop;
-	private JPanel pnlBottom;
 	
 	private JLabel lblTitle;
 	private JLabel[] lblName;
@@ -35,7 +38,6 @@ public class HighScoreBoard extends JFrame{
 		pnlMain = new JPanel();
 		pnlCenter = new JPanel();
 		pnlTop = new JPanel();
-		pnlBottom = new JPanel();
 		
 		lblTitle = new JLabel("Highscores");
 		lblName = new JLabel[10];

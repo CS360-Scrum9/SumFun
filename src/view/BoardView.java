@@ -2,6 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +33,10 @@ import model.TimedGamemode;
 public class BoardView extends JFrame implements Observer{
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel pnlGrid;
 	private JPanel pnlQueue;
 	private JPanel pnlNorth;
@@ -104,10 +109,10 @@ public class BoardView extends JFrame implements Observer{
 		//Adds tiles to the grid
 		for (int i = 0; i < 11; i++) {
 			for (int j = 0; j < 11; j++) {
-				tileButtons[i][j] = tiles[i][j].getTile();
-				tiles[i][j].addObserver(this);
-				if(tiles[i][j].isOccupied()) {
-					tileButtons[i][j].setText("" + tiles[i][j].getNumber());
+				tileButtons[i][j] = this.tiles[i][j].getTile();
+				this.tiles[i][j].addObserver(this);
+				if(this.tiles[i][j].isOccupied()) {
+					tileButtons[i][j].setText("" + this.tiles[i][j].getNumber());
 				}
 				if(i > 0 && i < 10 && j > 0 && j < 10){
 					pnlGrid.add(tileButtons[i][j]);
@@ -129,12 +134,16 @@ public class BoardView extends JFrame implements Observer{
 		
 		for(int i = 4; i >= 0; i--){
 			queueTiles[i] = new JLabel("", SwingConstants.CENTER);
+			if(i==4){
+				queueTiles[i].setFont(new Font(queueTiles[i].getFont().getFontName(), Font.BOLD, 36));
+			} else {
+				queueTiles[i].setFont(new Font(queueTiles[i].getFont().getFontName(), Font.PLAIN, 12));
+			}
 			pnlQueue.add(queueTiles[i]);
 		}
 		
 		pnlQueue.add(queueRefresh);
 		queueTiles[4].setOpaque(true);
-		queueTiles[4].setBackground(Color.GREEN);
 		updateQueue();
 		
 		hintCount = 3;
@@ -275,7 +284,6 @@ public class BoardView extends JFrame implements Observer{
 	    JButton button;
         Color color;
         Color originalColor;
-        int count;
 		
 		public FlashListener( JButton button, Color color ) {
 	            this.button = button;

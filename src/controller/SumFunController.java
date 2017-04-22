@@ -1,11 +1,13 @@
 package controller;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 import model.MoveCounter;
 import model.ObservableTile;
@@ -28,6 +30,7 @@ public class SumFunController {
 	private FileHandler fileHandler;
 	private TimedGamemode gamemode;
 	private boolean timed;
+	private boolean canclick;
 	private boolean clearTilesUsed;
 	private int neighborCount;
 	private int hintCount;
@@ -35,7 +38,8 @@ public class SumFunController {
 	public SumFunController(){}
 	
 	public SumFunController(Scoring score, TileQueue tileQ, 
-			ObservableTile[][] tiles, MoveCounter mc, BoardView board, HighScoreBoard highScoreBoard) throws SecurityException, IOException{
+			ObservableTile[][] tiles, MoveCounter mc, BoardView board, 
+			HighScoreBoard highScoreBoard) throws SecurityException, IOException{
 		this.score = score;
 		this.tileQ = tileQ;
 		this.tiles = tiles;
@@ -43,35 +47,38 @@ public class SumFunController {
 		this.mc = mc;
 		
 		hintCount = 3;
-		timed = false;
 		clearTilesUsed = false;
-		fileHandler = new FileHandler();
+		this.canclick = true;
+		this.timed = false;
+		this.fileHandler = new FileHandler();
 		
-		gamemode = TimedGamemode.getGamemode();
+		this.gamemode = TimedGamemode.getGamemode();
 		this.highScoreBoard = highScoreBoard;
 		
-		board.addTileButtonHandler(new TileButtonHandler());
-		board.addRefreshButtonHandler(new RefreshButtonHandler());
-		board.addRadioButtonListener(new RadioButtonListener());
-		board.addMenuItemListener(new MenuItemListener());
-		board.addHintButtonHandler(new HintButtonHandler());
+		this.board.addTileButtonHandler(new TileButtonHandler());
+		this.board.addRefreshButtonHandler(new RefreshButtonHandler());
+		this.board.addRadioButtonListener(new RadioButtonListener());
+		this.board.addMenuItemListener(new MenuItemListener());
+		this.board.addHintButtonHandler(new HintButtonHandler());
 	}
 
 	private class TileButtonHandler implements ActionListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int row; 
-			int column;
-			Tile tile = (Tile) e.getSource();
-			row = tile.getRow();
-			column = tile.getColumn();
-					
-			if(!tile.isOccupied()){
-				placeTile(tiles[row][column], tileQ.getNextValue());
-				checkGameOver(); 
-			}else if(clearTilesUsed == false){
-				clearAllTilesWithNumber(tile.getNumber());
+			if(canclick){
+				int row; 
+				int column;
+				Tile tile = (Tile) e.getSource();
+				row = tile.getRow();
+				column = tile.getColumn();
+				 					
+				if(!tile.isOccupied()){
+				 	placeTile(tiles[row][column], tileQ.getNextValue());
+				 	checkGameOver();
+				}else if(clearTilesUsed == false){
+					clearAllTilesWithNumber(tile.getNumber());
+				}
 			}
 		}	
 	}
@@ -80,8 +87,21 @@ public class SumFunController {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			tileQ.reset();
-			tileQ.setRefreshIsEnabled(false);
+			Timer randomizer = new Timer(10, new ActionListener(){
+			private int count = 0;
+		    private int maxCount = 50;
+				 		    
+				public void actionPerformed(ActionEvent e){
+					if (count >= maxCount) {
+						((Timer) e.getSource()).stop();
+						tileQ.setRefreshIsEnabled(false);
+					} else {
+						tileQ.reset();
+						count++;
+					}
+				}
+			});
+			randomizer.start();
 		}
 	}
 	
@@ -183,11 +203,64 @@ public class SumFunController {
 	 * @param qValue The value of the next tile in queue to be placed.
 	 */
 	public void placeTile(ObservableTile tile, int queueValue){
+		canclick = false;
 		if(checkNeighbors(tile, queueValue)) {
-			resetNeighbors(tile);
+			tile.setOccupied(true);
+			tile.setNumber(queueValue);
+			Timer greenFlash = new Timer(200, new ActionListener(){
+			 	private int count = 0;
+			 	private int maxCount = 4;
+			 	private boolean on = false;
+			 	private int row = tile.getRow();
+			 	private int col = tile.getColumn();
+			 
+			 	public void actionPerformed(ActionEvent e) {
+			 		if (count >= maxCount) {
+			 			for(int i = -1; i < 2; i++){
+			 			    for(int j = -1; j < 2; j++){
+			 			    	if(tiles[row+i][col+j].isOccupied()) {
+			 			    		tiles[row+i][col+j].getTile().setBackground(null);
+			 			        }
+			 			    }
+			 			}
+			 			((Timer) e.getSource()).stop();
+			 			resetNeighbors(tile);
+			 			canclick = true;
+			        } else {
+			 	    	for(int i = -1; i < 2; i++){
+			    			for(int j = -1; j < 2; j++){
+			 			    	if(tiles[row+i][col+j].isOccupied()) {
+			 						tiles[row+i][col+j].getTile().setBackground( on ? Color.GREEN : null);
+			    				}
+			    			}
+			    		}
+ 			            on = !on;
+			            count++;
+           	        }
+			 	}
+			 });
+			 greenFlash.start();
 		} else { 
 			tile.setOccupied(true);
 			tile.setNumber(queueValue);
+			Timer redFlash = new Timer(200, new ActionListener(){
+				 private int count = 0;
+				 private int maxCount = 4;
+				 private boolean on = false;
+				 
+				 public void actionPerformed(ActionEvent e) {
+				 	if (count >= maxCount) {
+				 		tile.getTile().setBackground(null);
+				 		((Timer) e.getSource()).stop();
+				 		canclick = true;
+				    } else {
+				 		tile.getTile().setBackground( on ? Color.RED : null);
+				 		on = !on;
+				 		count++;
+				 	}
+				 }
+			});
+			redFlash.start();
 			mc.setTileCount(mc.getTileCount() + 1);
 		 }
 	}

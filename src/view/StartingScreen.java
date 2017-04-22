@@ -8,6 +8,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class StartingScreen extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3L;
+
 	private JPanel pnlMain;
 
 	private JPanel pnlTop;
