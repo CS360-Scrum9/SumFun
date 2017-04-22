@@ -14,6 +14,7 @@ public class Tile extends JButton{
 	private int column;
 	private boolean isOccupied;
 	private boolean flash;
+	private boolean reset;
 	
 	// Constructor
 	public Tile(int row, int column) {
@@ -26,6 +27,7 @@ public class Tile extends JButton{
 	
 	//Populate only a 7X7 grid of tiles with numbers
 	public void populateGrid(){
+		this.setReset(true);
 		Random rand = new Random();
 		if (row > 1 && row < 9 && column > 1 && column < 9){
 			setOccupied(true);
@@ -39,7 +41,7 @@ public class Tile extends JButton{
 	public void setFlash(boolean flash){
 		this.flash = flash;
 	}
-	public boolean doFlash(){
+	public boolean isFlash(){
 		return this.flash;
 	}
 	
@@ -64,4 +66,18 @@ public class Tile extends JButton{
 		this.isOccupied = isOccupied;
 	}
 	// endregion
+
+	/**
+	 * @return the reset
+	 */
+	public boolean isReset() {
+		return reset;
+	}
+
+	/**
+	 * @param reset the reset to set
+	 */
+	public void setReset(boolean reset) {
+		this.reset = reset;
+	}
 }

@@ -272,6 +272,7 @@ public class SumFunController {
 				tiles[i][j].resetTile();
 			}
 		}
+		hintCount = 3;
 		tileQ.reset();
 		mc.setTileCount(49);
 		score.setScore(0);
@@ -363,8 +364,7 @@ public class SumFunController {
 		clearTilesUsed = true;
 	}
 	
-	private ObservableTile useHint(){
-		ObservableTile tile = null;
+	private void useHint(){
 		neighborCount = 0;
 		int maxCount = 0;
 		int row = 0;
@@ -382,11 +382,8 @@ public class SumFunController {
 		}
 		
 		if(maxCount > 0){
-			tile = tiles[row][column];
 			tiles[row][column].startFlash();
 			tiles[row][column].stopFlash();
 		}
-		System.out.println("row: " + row + " col: " + column + " number: " + tiles[row][column].getNumber() );
-		return tile;
 	}
 }

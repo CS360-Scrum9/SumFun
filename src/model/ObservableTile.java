@@ -8,12 +8,14 @@ public class ObservableTile extends Observable {
 
 	public ObservableTile(int row, int column){
 		tile = new Tile(row,column);
+		tile.setReset(false);
 	}
 
 	public void resetTile(){
 		tile.populateGrid();
 		setChanged();
 		notifyObservers();
+		tile.setReset(false);
 	}
 
 	// region: Getter and Setter methods.
@@ -29,7 +31,7 @@ public class ObservableTile extends Observable {
 	}
 	
 	public boolean doFlash(){
-		return tile.doFlash();
+		return tile.isFlash();
 	}
 	
 	public Tile getTile(){
@@ -57,6 +59,14 @@ public class ObservableTile extends Observable {
 
 	public boolean isOccupied(){
 		return tile.isOccupied();
+	}
+	
+	public boolean isReset() {
+		return this.tile.isReset();
+	}
+
+	public void setReset(boolean reset) {
+		this.tile.setReset(reset);
 	}
 
 	// endregion

@@ -251,6 +251,12 @@ public class BoardView extends JFrame implements Observer{
 			tileButtons[row][column].setText("");
 		}
 		
+		if(tile.isReset() && hintCount < 3){
+			hintCount = 3;
+			hintButton.setText("Hint (" + hintCount + ")");
+			hintButton.setEnabled(true);
+		}
+		
 		if(tile.doFlash()){
 			time = new Timer(400, new FlashListener(tileButtons[row][column], Color.YELLOW));
 			stopTime = false;
