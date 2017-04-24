@@ -60,6 +60,7 @@ public class SumFunController {
 		this.board.addRadioButtonListener(new RadioButtonListener());
 		this.board.addMenuItemListener(new MenuItemListener());
 		this.board.addHintButtonHandler(new HintButtonHandler());
+		this.board.addRemoveButtonHandler(new RemoveButtonHandler());
 	}
 
 	private class TileButtonHandler implements ActionListener {
@@ -77,6 +78,7 @@ public class SumFunController {
 				 	placeTile(tiles[row][column], tileQ.getNextValue());
 				}else if(clearTilesUsed == false){
 					clearAllTilesWithNumber(tile.getNumber());
+					toggleTiles();
 				}
 			}
 		}	
@@ -108,10 +110,15 @@ public class SumFunController {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//if(hintCount > 0){
-			//	hintCount--;
-				useHint();
-			//}
+			useHint();
+		}
+	}
+	
+	private class RemoveButtonHandler implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e){
+			toggleTiles();
 		}
 	}
 	
@@ -389,6 +396,14 @@ public class SumFunController {
 		if(maxCount > 0){
 			tiles[row][column].startFlash();
 			tiles[row][column].stopFlash();
+		}
+	}
+	
+	private void toggleTiles(){
+		for(ObservableTile[] g : tiles){
+			for(ObservableTile t : g){
+				t.toggleEnable(clearTilesUsed);
+			}
 		}
 	}
 }

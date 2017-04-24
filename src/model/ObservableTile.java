@@ -68,6 +68,14 @@ public class ObservableTile extends Observable {
 	public void setReset(boolean reset) {
 		this.tile.setReset(reset);
 	}
+	
+	public void toggleEnable(boolean toggle){
+		if(tile.isOccupied()){
+			tile.setEnabled(!toggle);
+		} else {
+			tile.setEnabled(toggle);
+		}
+	}
 
 	// endregion
 }

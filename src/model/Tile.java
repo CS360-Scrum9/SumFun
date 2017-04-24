@@ -63,6 +63,7 @@ public class Tile extends JButton{
 	}
 	
 	public void setOccupied(boolean isOccupied){
+		this.setEnabled(!isOccupied);
 		this.isOccupied = isOccupied;
 	}
 	// endregion

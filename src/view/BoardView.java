@@ -44,6 +44,7 @@ public class BoardView extends JFrame implements Observer{
 	
 	private JButton queueRefresh;
 	private JButton hintButton;
+	private JButton removeButton;
 	
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
@@ -149,6 +150,8 @@ public class BoardView extends JFrame implements Observer{
 		hintCount = 3;
 		hintButton = new JButton("Hint (" + hintCount + ")");
 		pnlSouth.add(hintButton);
+		removeButton = new JButton("Remove a Number");
+		pnlSouth.add(removeButton);
 		
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
@@ -336,5 +339,9 @@ public class BoardView extends JFrame implements Observer{
 
 	public void addHintButtonHandler(ActionListener al){
 		hintButton.addActionListener(al);
+	}
+	
+	public void addRemoveButtonHandler(ActionListener al){
+		removeButton.addActionListener(al);
 	}
 }
