@@ -75,7 +75,6 @@ public class SumFunController {
 				 					
 				if(!tile.isOccupied()){
 				 	placeTile(tiles[row][column], tileQ.getNextValue());
-				 	checkGameOver();
 				}else if(clearTilesUsed == false){
 					clearAllTilesWithNumber(tile.getNumber());
 				}
@@ -109,10 +108,10 @@ public class SumFunController {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(hintCount > 0){
-				hintCount--;
+			//if(hintCount > 0){
+			//	hintCount--;
 				useHint();
-			}
+			//}
 		}
 	}
 	
@@ -194,6 +193,7 @@ public class SumFunController {
 			newScore = score.getScore() + neighborCount * 10;
 			score.setScore(newScore);
 		}
+		checkGameOver();
 	}
 	
 	/**
@@ -262,6 +262,7 @@ public class SumFunController {
 			});
 			redFlash.start();
 			mc.setTileCount(mc.getTileCount() + 1);
+			checkGameOver();
 		 }
 	}
 	
@@ -295,7 +296,6 @@ public class SumFunController {
 		if(mc.getTileCount() >= 81 && clearTilesUsed == true){
 			gameOver("Game Over! All tiles are occupied! New Game?", JOptionPane.ERROR_MESSAGE);
 		} else if(mc.getTileCount() <= 0){
-			
 			if (timed) {
 				gamemode.stopTimer();
 			}
@@ -353,15 +353,20 @@ public class SumFunController {
 	}
 	
 	private void clearAllTilesWithNumber(int n){
+		int count = 0;
 		for(int i = 1; i < 10; i++){
 			for(int j = 1; j < 10; j++){
 				if(tiles[i][j].getNumber() == n){
+					count++;
 					tiles[i][j].setOccupied(false);
 					tiles[i][j].setNumber(0);
 				}
 			}
 		}
+		
+		mc.setTileCount(mc.getTileCount() - count);
 		clearTilesUsed = true;
+		checkGameOver();
 	}
 	
 	private void useHint(){

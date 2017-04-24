@@ -238,13 +238,13 @@ public class BoardView extends JFrame implements Observer{
 	}
 	
 	private void updateTile(Observable arg0){
+		
 		stopTime = true;
 		int row;
 		int column;
 		ObservableTile tile = (ObservableTile) arg0;
 		row = tile.getRow();
 		column = tile.getColumn();
-		
 		if(tile.isOccupied()){
 			tileButtons[row][column].setText("" + tile.getNumber());
 		} else{
