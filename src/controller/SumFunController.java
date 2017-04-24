@@ -21,6 +21,10 @@ import view.HighScoreBoard;
 
 public class SumFunController {
 	
+	private static SumFunController sfc = new SumFunController();
+	
+	public static SumFunController getSFC(){return sfc;}
+	
 	private Scoring score;
 	private TileQueue tileQ;
 	private ObservableTile[][] tiles;
@@ -35,9 +39,9 @@ public class SumFunController {
 	private int neighborCount;
 	private int hintCount;
 	
-	public SumFunController(){}
+	private SumFunController(){}
 	
-	public SumFunController(Scoring score, TileQueue tileQ, 
+	public void instantiateSumFunController(Scoring score, TileQueue tileQ, 
 			ObservableTile[][] tiles, MoveCounter mc, BoardView board, 
 			HighScoreBoard highScoreBoard) throws SecurityException, IOException{
 		this.score = score;
