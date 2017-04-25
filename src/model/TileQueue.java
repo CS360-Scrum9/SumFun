@@ -10,7 +10,6 @@ public class TileQueue extends Observable{
 	private int queueSize = 500;
 	private int currentQueueSize = 10;
 	private int[] currentQueue;
-	private boolean enableRefresh;
 	
 	private TileQueue(){
 		reset();
@@ -25,7 +24,6 @@ public class TileQueue extends Observable{
 	
 	public void reset(){
 		
-		enableRefresh = true;
 		tileQueue = new Queue(queueSize);
 		currentQueue = new int[currentQueueSize];
 		Random rand = new Random();
@@ -60,21 +58,4 @@ public class TileQueue extends Observable{
 	public int getNextValue(){
 		return currentQueue[4];
 	}
-
-	/**
-	 * @return the enableRefresh
-	 */
-	public boolean refreshIsEnabled() {
-		return enableRefresh;
-	}
-
-	/**
-	 * @param enableRefresh the enableRefresh to set
-	 */
-	public void setRefreshIsEnabled(boolean enableRefresh) {
-		this.enableRefresh = enableRefresh;
-		setChanged();
-		notifyObservers();
-	}
-	
 }

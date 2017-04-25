@@ -1,11 +1,13 @@
 package controller;
 
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
@@ -32,6 +34,7 @@ public class SumFunController {
 	private boolean timed;
 	private boolean canclick;
 	private boolean clearTilesUsed;
+	private boolean clearTiles;
 	private int neighborCount;
 	private int hintCount;
 	
@@ -48,6 +51,7 @@ public class SumFunController {
 		
 		hintCount = 3;
 		clearTilesUsed = false;
+		clearTiles = false;
 		this.canclick = true;
 		this.timed = false;
 		this.fileHandler = new FileHandler();
@@ -57,10 +61,10 @@ public class SumFunController {
 		
 		this.board.addTileButtonHandler(new TileButtonHandler());
 		this.board.addRefreshButtonHandler(new RefreshButtonHandler());
-		this.board.addRadioButtonListener(new RadioButtonListener());
-		this.board.addMenuItemListener(new MenuItemListener());
 		this.board.addHintButtonHandler(new HintButtonHandler());
 		this.board.addRemoveButtonHandler(new RemoveButtonHandler());
+		this.board.addNewTimedGameButtonHandler(new NewTimedGameButtonHandler());
+		this.board.addNewUntimedGameButtonHandler(new NewUntimedGameButtonHandler());
 	}
 
 	private class TileButtonHandler implements ActionListener {
@@ -86,8 +90,13 @@ public class SumFunController {
 	
 	private class RefreshButtonHandler implements ActionListener {
 		
+		private JButton button;
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			button = (JButton) e.getSource();
+			button.setEnabled(false);
+			
 			Timer randomizer = new Timer(10, new ActionListener(){
 			private int count = 0;
 		    private int maxCount = 50;
@@ -95,7 +104,6 @@ public class SumFunController {
 				public void actionPerformed(ActionEvent e){
 					if (count >= maxCount) {
 						((Timer) e.getSource()).stop();
-						tileQ.setRefreshIsEnabled(false);
 					} else {
 						tileQ.reset();
 						count++;
@@ -108,49 +116,54 @@ public class SumFunController {
 	
 	private class HintButtonHandler implements ActionListener {
 		
+		private JButton button;
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			useHint();
+			if(hintCount > 0){
+				useHint();
+				button = (JButton) e.getSource();
+				hintCount--;
+				button.setText("Hint (" + hintCount + ")");
+				if(hintCount < 1){
+					button.setEnabled(false);
+				}
+
+			}
 		}
 	}
 	
 	private class RemoveButtonHandler implements ActionListener {
 		
+		private JButton button;
+		
 		@Override
 		public void actionPerformed(ActionEvent e){
 			toggleTiles();
+			button = (JButton) e.getSource();
+			button.setEnabled(false); 
 		}
 	}
 	
-	private class MenuItemListener implements ActionListener {
-	
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getActionCommand().equals("New")){
-				if(timed == true) {
-					resetGame(1);
-				} else {
-					resetGame(0);
-				}
-			} else {
-				System.exit(0);
-			}
-		}
-	}
-	
-	private class RadioButtonListener implements ActionListener {
+	private class NewTimedGameButtonHandler implements ActionListener {
 		
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getActionCommand().equals("Timed")) {
-				timed = true;
-			} else {
-				timed = false;
-			}
+		public void actionPerformed(ActionEvent e){
+			timed = true;
+			resetGame(1); 
 		}
 	}
 	
-
+	
+	private class NewUntimedGameButtonHandler implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e){
+			timed = false;
+			resetGame(0); 
+		}
+	}
+	
 	/**
 	 * Checks the sum of the next number with all the values of each of the neighboring tiles
 	 * and compares that sum to see if sum modular 10 equals the number (qValue) in the queue.
@@ -298,7 +311,9 @@ public class SumFunController {
 	private void checkGameOver(){
 		int optionNumber = 10;
 		
-		tileQ.dequeue();
+		if(clearTiles == false){
+			tileQ.dequeue();
+		}
 		
 		if(mc.getTileCount() >= 81 && clearTilesUsed == true){
 			gameOver("Game Over! All tiles are occupied! New Game?", JOptionPane.ERROR_MESSAGE);
@@ -326,7 +341,9 @@ public class SumFunController {
 		}
 		
 		if(timed == false){
-			mc.decrementCount();
+			if(clearTiles == false){
+				mc.decrementCount();
+			}
 			
 			if(mc.getMoveCount() <= 0){
 				gameOver("Game Over! You ran out of moves! New Game?", JOptionPane.ERROR_MESSAGE);
@@ -334,6 +351,7 @@ public class SumFunController {
 		}
 		
 		reset(optionNumber);
+		clearTiles = false;
 		
 	}
 	
@@ -373,7 +391,9 @@ public class SumFunController {
 		
 		mc.setTileCount(mc.getTileCount() - count);
 		clearTilesUsed = true;
+		clearTiles = true;
 		checkGameOver();
+		
 	}
 	
 	private void useHint(){

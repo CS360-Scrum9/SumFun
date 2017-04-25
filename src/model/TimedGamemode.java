@@ -52,7 +52,7 @@ public class TimedGamemode extends Gamemode {
 		} else {
 			time = minutes + ":" + seconds;
 		}
-		return time;
+		return "Time Left: " + time;
 	}
 	
 	private class UpdateTime implements ActionListener {

@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -45,23 +46,14 @@ public class BoardView extends JFrame implements Observer{
 	private JButton queueRefresh;
 	private JButton hintButton;
 	private JButton removeButton;
-	
-	private JMenuBar menuBar;
-	private JMenu fileMenu;
-	private JMenuItem newGameItem;
-	private JMenuItem exitItem;
-	private JRadioButtonMenuItem timedItem;
-	private JRadioButtonMenuItem untimedItem;
-	
-	private ButtonGroup buttonGroup;
+	private JButton timedGameButton;
+	private JButton untimedGameButton;
 	
 	private JLabel[] queueTiles;
 	private JLabel queueTitle;
 	private JLabel scoreLabel;
 	private JLabel lblCounter;
-	private JLabel lblMoveCounter;
 	private JLabel lblTimer;
-	private JLabel lblCountdown;
 	
 	private Scoring score;
 	private TileQueue tileQ;
@@ -88,11 +80,8 @@ public class BoardView extends JFrame implements Observer{
 		this.mc = mc;
 		mc.addObserver(this);
 		
-		lblCounter = new JLabel("Moves Left:  ", SwingConstants.CENTER);
-		lblMoveCounter = new JLabel("" + mc.getMoveCount(), SwingConstants.CENTER);
-		
-		lblTimer = new JLabel("Time Left:  ", SwingConstants.CENTER);
-		lblCountdown = new JLabel("5:00", SwingConstants.CENTER);
+		lblCounter = new JLabel("Moves Left: " + mc.getMoveCount(), SwingConstants.CENTER);
+		lblTimer = new JLabel("Time Left: 5:00", SwingConstants.CENTER);
 		
 	
 		pnlGrid = new JPanel();
@@ -101,7 +90,7 @@ public class BoardView extends JFrame implements Observer{
 		pnlSouth = new JPanel();
 		
 		pnlGrid.setLayout(new GridLayout(9, 9));
-		pnlNorth.setLayout(new GridLayout(1, 3));
+		pnlNorth.setLayout(new GridLayout(1, 2));
 		pnlQueue.setLayout(new GridLayout(7, 1));
 		pnlSouth.setLayout(new GridLayout(1, 4));
 		
@@ -124,13 +113,11 @@ public class BoardView extends JFrame implements Observer{
 		scoreLabel = new JLabel(score.toString(), SwingConstants.CENTER);
 		
 		pnlNorth.add(lblCounter);
-		pnlNorth.add(lblMoveCounter);
 		pnlNorth.add(scoreLabel);
-		
 		
 		queueRefresh = new JButton("<html>Refresh<br>Queue</html>");
 		queueTiles = new JLabel[5];
-		queueTitle = new JLabel("Queue");
+		queueTitle = new JLabel("Queue", SwingConstants.CENTER);
 		pnlQueue.add(queueTitle);
 		
 		for(int i = 4; i >= 0; i--){
@@ -149,73 +136,36 @@ public class BoardView extends JFrame implements Observer{
 		
 		hintCount = 3;
 		hintButton = new JButton("Hint (" + hintCount + ")");
-		pnlSouth.add(hintButton);
 		removeButton = new JButton("Remove a Number");
+		timedGameButton = new JButton("New Timed Game");
+		untimedGameButton = new JButton("New Untimed Game");
+		
+		pnlSouth.add(hintButton);
 		pnlSouth.add(removeButton);
-		
-		menuBar = new JMenuBar();
-		fileMenu = new JMenu("File");
-		
-		newGameItem = new JMenuItem("New Game");
-		newGameItem.setMnemonic(KeyEvent.VK_N);
-		newGameItem.setActionCommand("New");
-		
-		exitItem = new JMenuItem("Exit");
-		exitItem.setMnemonic(KeyEvent.VK_X);
-	    exitItem.setActionCommand("Exit");
+		pnlSouth.add(untimedGameButton);
+		pnlSouth.add(timedGameButton);
 	    
-		untimedItem = new JRadioButtonMenuItem("Untimed Game");
-		untimedItem.setMnemonic(KeyEvent.VK_U);
-	    untimedItem.setActionCommand("Untimed");
-	    
-		timedItem = new JRadioButtonMenuItem("Timed Game");
-		timedItem.setMnemonic(KeyEvent.VK_T);
-	    timedItem.setActionCommand("Timed");
-	    
-	    buttonGroup = new ButtonGroup();
-	    buttonGroup.add(untimedItem);
-	    buttonGroup.add(timedItem);
-	    untimedItem.setSelected(true);
-	    
-	    fileMenu.add(newGameItem);
-	    fileMenu.addSeparator();
-	    fileMenu.add(timedItem);
-	    fileMenu.add(untimedItem);
-	    fileMenu.addSeparator();
-	    fileMenu.add(exitItem);
-	    
-	    menuBar.add(fileMenu);
-	    
-	    
-	    
-	    
-		
-		
 		this.add(pnlGrid, BorderLayout.CENTER);
 		this.add(pnlNorth, BorderLayout.NORTH);
 		this.add(pnlQueue, BorderLayout.EAST);
 		this.add(pnlSouth, BorderLayout.SOUTH);
-		this.setJMenuBar(menuBar);
-
 	}
 	
 	public void switchGameModeView(int version){
 		if(version == 1){
 			this.remove(pnlNorth);
 			pnlNorth = new JPanel();
-			pnlNorth.setLayout(new GridLayout(1, 3));
+			pnlNorth.setLayout(new GridLayout(1, 2));
 			pnlNorth.add(lblTimer);
-			pnlNorth.add(lblCountdown);
 			pnlNorth.add(scoreLabel);
 			this.add(pnlNorth, BorderLayout.NORTH);
 			timedMode = TimedGamemode.getGamemode();
-			timedMode.startTime(lblCountdown);
+			timedMode.startTime(lblTimer);
 		} else{
 			this.remove(pnlNorth);
 			pnlNorth = new JPanel();
-			pnlNorth.setLayout(new GridLayout(1, 3));
+			pnlNorth.setLayout(new GridLayout(1, 2));
 			pnlNorth.add(lblCounter);
-			pnlNorth.add(lblMoveCounter);
 			pnlNorth.add(scoreLabel);
 			this.add(pnlNorth, BorderLayout.NORTH);
 		}
@@ -233,11 +183,16 @@ public class BoardView extends JFrame implements Observer{
 		} else { 
 			updateTile(arg0);
 		}
-		
 	}
 	
 	private void updateScore(){
 		scoreLabel.setText(score.toString());
+		if(score.getScore() == 0){
+			hintButton.setText("Hint (" + 3 + ")");
+			hintButton.setEnabled(true);
+			removeButton.setEnabled(true);
+			queueRefresh.setEnabled(true);
+		}
 	}
 	
 	private void updateTile(Observable arg0){
@@ -254,21 +209,11 @@ public class BoardView extends JFrame implements Observer{
 			tileButtons[row][column].setText("");
 		}
 		
-		if(tile.isReset() && hintCount < 3){
-			hintCount = 3;
-			hintButton.setText("Hint (" + hintCount + ")");
-			hintButton.setEnabled(true);
-		}
-		
 		if(tile.doFlash()){
+			hintCount--;
 			time = new Timer(400, new FlashListener(tileButtons[row][column], Color.YELLOW));
 			stopTime = false;
 			time.start();
-			hintCount--;
-			hintButton.setText("Hint (" + hintCount + ")");
-			if(hintCount < 1){
-				hintButton.setEnabled(false);
-			}
 		}
 	}
 	
@@ -277,16 +222,10 @@ public class BoardView extends JFrame implements Observer{
 		for(int i = 4; i >= 0; i--) {
 			queueTiles[i].setText("" + currentQ[i]);
 		}
-		
-		if(tileQ.refreshIsEnabled()){
-			queueRefresh.setEnabled(true);
-		} else {
-			queueRefresh.setEnabled(false);
-		}
 	}
 	
 	private void updateMoveCounter(){
-		lblMoveCounter.setText("" + mc.getMoveCount());
+		lblCounter.setText("Moves Left: " + mc.getMoveCount());
 	}
 	
 	private class FlashListener implements ActionListener {
@@ -326,16 +265,6 @@ public class BoardView extends JFrame implements Observer{
 	public void addRefreshButtonHandler(ActionListener al){
 		queueRefresh.addActionListener(al);
 	}
-	
-	public void addMenuItemListener(ActionListener al){
-		newGameItem.addActionListener(al);
-		exitItem.addActionListener(al);
-	}
-	
-	public void addRadioButtonListener(ActionListener al){
-		untimedItem.addActionListener(al);
-		timedItem.addActionListener(al);
-	}
 
 	public void addHintButtonHandler(ActionListener al){
 		hintButton.addActionListener(al);
@@ -343,5 +272,13 @@ public class BoardView extends JFrame implements Observer{
 	
 	public void addRemoveButtonHandler(ActionListener al){
 		removeButton.addActionListener(al);
+	}
+	
+	public void addNewTimedGameButtonHandler(ActionListener al){
+		timedGameButton.addActionListener(al);
+	}
+	
+	public void addNewUntimedGameButtonHandler(ActionListener al){
+		untimedGameButton.addActionListener(al);
 	}
 }
