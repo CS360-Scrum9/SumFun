@@ -23,6 +23,10 @@ import view.HighScoreBoard;
 
 public class SumFunController {
 	
+	private static SumFunController sfc = new SumFunController();
+	
+	public static SumFunController getSFC(){return sfc;}
+	
 	private Scoring score;
 	private TileQueue tileQ;
 	private ObservableTile[][] tiles;
@@ -38,9 +42,9 @@ public class SumFunController {
 	private int neighborCount;
 	private int hintCount;
 	
-	public SumFunController(){}
+	private SumFunController(){}
 	
-	public SumFunController(Scoring score, TileQueue tileQ, 
+	public void instantiateSumFunController(Scoring score, TileQueue tileQ, 
 			ObservableTile[][] tiles, MoveCounter mc, BoardView board, 
 			HighScoreBoard highScoreBoard) throws SecurityException, IOException{
 		this.score = score;
@@ -170,13 +174,9 @@ public class SumFunController {
 	 * @param tile The origin tile whose neighbors are to be checked.
 	 * @return Boolean saying if the move was successful.
 	 */
-	public boolean checkNeighbors(ObservableTile tile, int queueValue){
-		int row = 0;
-		int column = 0;
+	public boolean checkNeighbors(int row, int column, int queueValue){
 		int sum = 0;
 		neighborCount = 0;
-		row = tile.getRow();
-		column = tile.getColumn();
 
 		//Add the numbers from all surrounding tiles
 		for(int i = -1; i < 2; i++){
@@ -196,12 +196,8 @@ public class SumFunController {
 	 * reset.
 	 * @param tile The tile whose neighbors will be reset.
 	 */
-	public void resetNeighbors(ObservableTile tile){
-		int row = 0;
-		int column = 0;
+	public void resetNeighbors(int row, int column){
 		int newScore;
-		row = tile.getRow();
-		column = tile.getColumn();
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
 				tiles[row + i][column + j].setOccupied(false);
@@ -224,7 +220,7 @@ public class SumFunController {
 	 */
 	public void placeTile(ObservableTile tile, int queueValue){
 		canclick = false;
-		if(checkNeighbors(tile, queueValue)) {
+		if(checkNeighbors(tile.getRow(), tile.getColumn(), queueValue)) {
 			tile.setOccupied(true);
 			tile.setNumber(queueValue);
 			Timer greenFlash = new Timer(200, new ActionListener(){
@@ -244,7 +240,7 @@ public class SumFunController {
 			 			    }
 			 			}
 			 			((Timer) e.getSource()).stop();
-			 			resetNeighbors(tile);
+			 			resetNeighbors(tile.getRow(), tile.getColumn());
 			 			canclick = true;
 			        } else {
 			 	    	for(int i = -1; i < 2; i++){
@@ -403,7 +399,7 @@ public class SumFunController {
 		int column = 0;
 		for(int i = 1; i < 10; i++){
 			for(int j = 1; j < 10; j++){
-				if(!tiles[i][j].isOccupied() && checkNeighbors(tiles[i][j], tileQ.getNextValue())){
+				if(!tiles[i][j].isOccupied() && checkNeighbors(tiles[i][j].getRow(), tiles[i][j].getColumn(), tileQ.getNextValue())){
 					if(neighborCount > maxCount){
 						maxCount = neighborCount;
 						row = i;
