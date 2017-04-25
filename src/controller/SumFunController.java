@@ -25,7 +25,9 @@ public class SumFunController {
 	
 	private static SumFunController sfc = new SumFunController();
 	
-	public static SumFunController getSFC(){return sfc;}
+	public static SumFunController getController(){
+		return sfc;
+	}
 	
 	private Scoring score;
 	private TileQueue tileQ;

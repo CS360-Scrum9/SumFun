@@ -65,8 +65,6 @@ public class BoardView extends JFrame implements Observer{
 	private boolean stopTime;
 	private int hintCount;
 	
-	
-	
 	public BoardView(Scoring score, TileQueue tileQ, ObservableTile[][] tiles, MoveCounter mc) {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(700,700);
@@ -83,7 +81,6 @@ public class BoardView extends JFrame implements Observer{
 		lblCounter = new JLabel("Moves Left: " + mc.getMoveCount(), SwingConstants.CENTER);
 		lblTimer = new JLabel("Time Left: 5:00", SwingConstants.CENTER);
 		
-	
 		pnlGrid = new JPanel();
 		pnlQueue = new JPanel();
 		pnlNorth = new JPanel();
@@ -96,7 +93,6 @@ public class BoardView extends JFrame implements Observer{
 		
 		tileButtons = new Tile[11][11];
 		
-		//Adds tiles to the grid
 		for (int i = 0; i < 11; i++) {
 			for (int j = 0; j < 11; j++) {
 				tileButtons[i][j] = this.tiles[i][j].getTile();

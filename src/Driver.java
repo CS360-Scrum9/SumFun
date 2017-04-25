@@ -28,7 +28,7 @@ public class Driver {
 		Scoring score = Scoring.getInstance();
 		MoveCounter mc = MoveCounter.getInstance();
 		BoardView board = new BoardView(score,tileQ,tiles,mc);
-		SumFunController control = SumFunController.getSFC();
+		SumFunController control = SumFunController.getController();
 		control.instantiateSumFunController(score,tileQ,tiles,mc,board,highScores);
 		board.setVisible(true);
 	}
