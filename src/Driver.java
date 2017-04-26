@@ -6,10 +6,13 @@ import model.MoveCounter;
 import model.ObservableTile;
 import model.Scoring;
 import model.TileQueue;
+import model.TimedGamemode;
 import view.BoardView;
 import view.HighScoreBoard;
 
 public class Driver {
+	
+	private static final int SIZE = 11;
 	/**
 	 * Used to start the game.
 	 * @param args Any arguments passed when calling the program.
@@ -19,17 +22,19 @@ public class Driver {
 	public static void main(String[] args) throws SecurityException, IOException {
 		HighScoreBoard highScores = new HighScoreBoard("Untimed");
 		ObservableTile[][] tiles = new ObservableTile[11][11];
-		for(int i = 0; i < 11; i++){
-			for(int j = 0; j < 11; j++){
-				tiles[i][j] = new ObservableTile(i,j);
+		for(int i = 0; i < SIZE; i++){
+			for(int j = 0; j < SIZE; j++){
+				tiles[i][j] = new ObservableTile(i,j,SIZE);
 			}
 		}
+		SumFunController control = SumFunController.getController();
+		TimedGamemode gamemode = TimedGamemode.getGamemode();
+		gamemode.setController(control);
 		TileQueue tileQ = TileQueue.getInstance();
 		Scoring score = Scoring.getInstance();
 		MoveCounter mc = MoveCounter.getInstance();
-		BoardView board = new BoardView(score,tileQ,tiles,mc);
-		SumFunController control = SumFunController.getController();
-		control.instantiateSumFunController(score,tileQ,tiles,mc,board,highScores);
+		BoardView board = new BoardView(score,tileQ,tiles,mc,gamemode);
+		control.instantiateSumFunController(score,tileQ,tiles,mc,board,highScores,gamemode);
 		board.setVisible(true);
 	}
 }

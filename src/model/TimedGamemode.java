@@ -13,6 +13,7 @@ import javax.swing.Timer;
 
 public class TimedGamemode extends Gamemode {
 
+	public static final int START_TIME = 300;
 	private static TimedGamemode gamemode;
 	private JLabel lblTimer;
 	private int timeLeft;
@@ -22,6 +23,7 @@ public class TimedGamemode extends Gamemode {
 	private TimedGamemode() {
 		super();
 		timer = new Timer(1000, new UpdateTime());
+		timeLeft = START_TIME;
 	}
 
 	public static TimedGamemode getGamemode() {
@@ -36,7 +38,7 @@ public class TimedGamemode extends Gamemode {
 	}
 	
 	public void startTime(JLabel lblTimer) {
-		timeLeft = 300;
+		timeLeft = START_TIME;
 		this.lblTimer = lblTimer;
 		timer.start();
 	}
@@ -75,8 +77,8 @@ public class TimedGamemode extends Gamemode {
 		timer.stop();
 	}
 	
-	public String getTime() {
-		return convertToString();
+	public int getTime() {
+		return timeLeft;
 	}
 	
 	public void setTime(int time) {

@@ -48,7 +48,7 @@ public class SumFunController {
 	
 	public void instantiateSumFunController(Scoring score, TileQueue tileQ, 
 			ObservableTile[][] tiles, MoveCounter mc, BoardView board, 
-			HighScoreBoard highScoreBoard) throws SecurityException, IOException{
+			HighScoreBoard highScoreBoard, TimedGamemode gamemode) throws SecurityException, IOException{
 		this.score = score;
 		this.tileQ = tileQ;
 		this.tiles = tiles;
@@ -62,7 +62,7 @@ public class SumFunController {
 		this.timed = false;
 		this.fileHandler = new FileHandler();
 		
-		this.gamemode = TimedGamemode.getGamemode();
+		this.gamemode = gamemode;
 		this.highScoreBoard = highScoreBoard;
 		
 		this.board.addTileButtonHandler(new TileButtonHandler());
@@ -77,6 +77,7 @@ public class SumFunController {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			
 			if(canclick){
 				int row; 
 				int column;
@@ -176,7 +177,7 @@ public class SumFunController {
 	 * @param tile The origin tile whose neighbors are to be checked.
 	 * @return Boolean saying if the move was successful.
 	 */
-	public boolean checkNeighbors(int row, int column, int queueValue){
+	public boolean checkNeighbors(ObservableTile[][] tiles, int row, int column, int queueValue){
 		int sum = 0;
 		neighborCount = 0;
 
@@ -222,7 +223,7 @@ public class SumFunController {
 	 */
 	public void placeTile(ObservableTile tile, int queueValue){
 		canclick = false;
-		if(checkNeighbors(tile.getRow(), tile.getColumn(), queueValue)) {
+		if(checkNeighbors(this.tiles, tile.getRow(), tile.getColumn(), queueValue)) {
 			tile.setOccupied(true);
 			tile.setNumber(queueValue);
 			Timer greenFlash = new Timer(200, new ActionListener(){
@@ -298,12 +299,8 @@ public class SumFunController {
 		board.switchGameModeView(version);
 		highScoreBoard.setVisible(false);
 		clearTilesUsed = false;
-		
-		if (version == 1) {
-			gamemode.setTime(300);
-		} else {
-			mc.setMoveCount(50);
-		}
+		gamemode.setTime(300);
+		mc.setMoveCount(50);	
 	}
 	
 	private void checkGameOver(){
@@ -401,7 +398,9 @@ public class SumFunController {
 		int column = 0;
 		for(int i = 1; i < 10; i++){
 			for(int j = 1; j < 10; j++){
-				if(!tiles[i][j].isOccupied() && checkNeighbors(tiles[i][j].getRow(), tiles[i][j].getColumn(), tileQ.getNextValue())){
+				if(!tiles[i][j].isOccupied() && checkNeighbors(this.tiles,
+						tiles[i][j].getRow(), tiles[i][j].getColumn(),
+						tileQ.getNextValue())){
 					if(neighborCount > maxCount){
 						maxCount = neighborCount;
 						row = i;

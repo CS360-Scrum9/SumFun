@@ -60,12 +60,13 @@ public class BoardView extends JFrame implements Observer{
 	private ObservableTile[][] tiles;
 	private Tile[][] tileButtons;
 	private MoveCounter mc;
-	private TimedGamemode timedMode;
 	private Timer time;
+	private TimedGamemode gamemode;
 	private boolean stopTime;
 	private int hintCount;
 	
-	public BoardView(Scoring score, TileQueue tileQ, ObservableTile[][] tiles, MoveCounter mc) {
+	public BoardView(Scoring score, TileQueue tileQ, ObservableTile[][] tiles
+			, MoveCounter mc, TimedGamemode gamemode) {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(700,700);
 		setLayout(new BorderLayout());
@@ -77,6 +78,7 @@ public class BoardView extends JFrame implements Observer{
 		this.tiles = tiles;
 		this.mc = mc;
 		mc.addObserver(this);
+		this.gamemode = gamemode;
 		
 		lblCounter = new JLabel("Moves Left: " + mc.getMoveCount(), SwingConstants.CENTER);
 		lblTimer = new JLabel("Time Left: 5:00", SwingConstants.CENTER);
@@ -155,8 +157,8 @@ public class BoardView extends JFrame implements Observer{
 			pnlNorth.add(lblTimer);
 			pnlNorth.add(scoreLabel);
 			this.add(pnlNorth, BorderLayout.NORTH);
-			timedMode = TimedGamemode.getGamemode();
-			timedMode.startTime(lblTimer);
+			gamemode = TimedGamemode.getGamemode();
+			gamemode.startTime(lblTimer);
 		} else{
 			this.remove(pnlNorth);
 			pnlNorth = new JPanel();

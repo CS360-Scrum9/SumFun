@@ -10,22 +10,25 @@ public class Tile extends JButton{
 	private int number;
 	private int row;
 	private int column;
+	private int gridSize;
 	private boolean isOccupied;
 	private boolean flash;
 	
 	// Constructor
-	public Tile(int row, int column) {
+	public Tile(int row, int column, int size) {
 		this.row = row;
 		this.column = column;
 		this.isOccupied = false;
 		this.flash = false;
-		populateGrid();
+		this.setGridSize(size);
+		this.populateGrid(size);
 	}
 	
 	//Populate only a 7X7 grid of tiles with numbers
-	public void populateGrid(){
+	public void populateGrid(int size){
 		Random rand = new Random();
-		if (row > 1 && row < 9 && column > 1 && column < 9){
+		
+		if (row > 1 && row < size - 2 && column > 1 && column < size - 2){
 			setOccupied(true);
 			setNumber(rand.nextInt(10));
 		} else {
@@ -33,6 +36,8 @@ public class Tile extends JButton{
 			setNumber(0);
 		}
 	}
+		
+	
 	// region: Getter and Setter methods.
 	public void setFlash(boolean flash){
 		this.flash = flash;
@@ -62,5 +67,12 @@ public class Tile extends JButton{
 		this.setEnabled(!isOccupied);
 		this.isOccupied = isOccupied;
 	}
-	// endregion
+
+	public int getGridSize() {
+		return gridSize;
+	}
+
+	public void setGridSize(int gridSize) {
+		this.gridSize = gridSize;
+	}
 }

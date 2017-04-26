@@ -6,12 +6,12 @@ public class ObservableTile extends Observable {
 
 	private Tile tile;
 
-	public ObservableTile(int row, int column){
-		tile = new Tile(row,column);
+	public ObservableTile(int row, int column, int size){
+		tile = new Tile(row,column,size);
 	}
 
 	public void resetTile(){
-		tile.populateGrid();
+		tile.populateGrid(tile.getGridSize());
 		setChanged();
 		notifyObservers();
 	}
