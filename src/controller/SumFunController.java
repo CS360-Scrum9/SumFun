@@ -173,8 +173,10 @@ public class SumFunController {
 	/**
 	 * Checks the sum of the next number with all the values of each of the neighboring tiles
 	 * and compares that sum to see if sum modular 10 equals the number (qValue) in the queue.
-	 * @param tile The origin tile whose neighbors are to be checked.
-	 * @return Boolean saying if the move was successful.
+	 * @param row The row of the tile in question. 0 <= row <= 10
+	 * @param column The column of the tile in question. 0 <= column <= 10
+	 * @param queueValue The value of the number being placed or that is in the tile in question. 0 <= queueValue <= 9
+	 * @return
 	 */
 	public boolean checkNeighbors(int row, int column, int queueValue){
 		int sum = 0;
@@ -196,7 +198,8 @@ public class SumFunController {
 	 * Resets the values of all neighbor tiles. Only call if checkNeighbors() is true.
 	 * Also sets the score from resetting neighbors if three or more neighbors are 
 	 * reset.
-	 * @param tile The tile whose neighbors will be reset.
+	 * @param row The row of the tile in question. 0 <= row <= 10
+	 * @param column The column of the tile in question. 0 <= column <= 10
 	 */
 	public void resetNeighbors(int row, int column){
 		int newScore;
