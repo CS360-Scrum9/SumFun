@@ -179,7 +179,7 @@ public class SumFunController {
 	 * @param queueValue The value of the number being placed or that is in the tile in question. 0 <= queueValue <= 9
 	 * @return
 	 */
-	public boolean checkNeighbors(ObservableTile[][] tiles, int row, int column, int queueValue){
+	public boolean checkNeighbors(int row, int column, int queueValue){
 		int sum = 0;
 		neighborCount = 0;
 
@@ -226,7 +226,7 @@ public class SumFunController {
 	 */
 	public void placeTile(ObservableTile tile, int queueValue){
 		canclick = false;
-		if(checkNeighbors(this.tiles, tile.getRow(), tile.getColumn(), queueValue)) {
+		if(checkNeighbors(tile.getRow(), tile.getColumn(), queueValue)) {
 			tile.setOccupied(true);
 			tile.setNumber(queueValue);
 			Timer greenFlash = new Timer(200, new ActionListener(){
@@ -401,9 +401,8 @@ public class SumFunController {
 		int column = 0;
 		for(int i = 1; i < 10; i++){
 			for(int j = 1; j < 10; j++){
-				if(!tiles[i][j].isOccupied() && checkNeighbors(this.tiles,
-						tiles[i][j].getRow(), tiles[i][j].getColumn(),
-						tileQ.getNextValue())){
+				if(!tiles[i][j].isOccupied() && checkNeighbors(tiles[i][j].getRow(), 
+						tiles[i][j].getColumn(), tileQ.getNextValue())){
 					if(neighborCount > maxCount){
 						maxCount = neighborCount;
 						row = i;
@@ -425,5 +424,9 @@ public class SumFunController {
 				t.toggleEnable(clearTilesUsed);
 			}
 		}
+	}
+	
+	public void createMockboard(ObservableTile[][] ot){
+		this.tiles = ot;
 	}
 }

@@ -1,14 +1,15 @@
 package controller;
 
-import static org.junit.Assert.*;
+import model.ObservableTile;
 
 import org.junit.Test;
+import static org.junit.Assert.*;
 
-import model.Tile;
 
 public class SumFunControllerTest {
 
-	private Tile[][] mockTileGrid;
+	private ObservableTile[][] mockTileGrid;
+	private SumFunController sfc = SumFunController.getController();
 	
 	@Test
 	public void testCheckNeighbors() {
@@ -17,11 +18,12 @@ public class SumFunControllerTest {
 		//the inner 2x2 tiles occupied with numbers
 		for(int i = 0; i < 6; i++){
 			for(int j = 0; j < 6; j++){
-				mockTileGrid[i][j] = new Tile(i,j,6);
+				mockTileGrid[i][j] = new ObservableTile(i,j,6);
 			}
 		}
+		sfc.createMockboard(mockTileGrid);
 		// Black-box Testing
-		// assertEquals("Error", true, );
+		assertEquals("Error", false, sfc.checkNeighbors(tiles, row, column, queueValue));
 	}
 
 	@Test
