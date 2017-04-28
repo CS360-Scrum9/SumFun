@@ -447,8 +447,7 @@ public class SumFunController {
 		if(maxCount > 0){
 			tiles[row][column].startFlash();
 			tiles[row][column].stopFlash();
-		}
-		else if(maxCount == 0){
+		}else if(maxCount == 0){
 			SoundEffect.ERROR.play();
 			JOptionPane.showMessageDialog(null, "There are no valid moves.", "SumFun", JOptionPane.ERROR_MESSAGE);
 		}
