@@ -107,10 +107,20 @@ public class FileHandler {
 		File file = new File(fileName);
 		Scanner input = null;
 		
-		try {
-			input = new Scanner(file);
-		} catch (FileNotFoundException ex) {
-			System.out.println(ex);
+		while (input == null) {
+			try {
+				input = new Scanner(file);
+			} catch (FileNotFoundException ex) {
+				
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					System.out.println(e);
+				}
+				
+				System.out.println(ex);
+				System.out.println("Created new " + fileName);
+			}
 		}
 		
 		String[][] scores = new String[10][];
