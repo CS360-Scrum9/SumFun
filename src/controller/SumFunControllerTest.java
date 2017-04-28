@@ -1,9 +1,11 @@
 package controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import model.ObservableTile;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 
 public class SumFunControllerTest {
@@ -14,6 +16,15 @@ public class SumFunControllerTest {
 	@Test
 	public void testCheckNeighbors() {
 		
+		
+		/*
+		 * Input condition:				Class: 	  
+		 * Value of queueValue:		0 <= int <= 9, int < 0, int > 10
+		 * Value of row:			0 < int < length of tilegrid (in this case 4), int < 0, int > 10
+		 * Value of column:			0 < int < length of tilegrid (in this case 4), int < 0, int > 10
+		 * 
+		 * */
+		 
 		//create a mock 4x4 grid of tiles with
 		//the inner 2x2 tiles occupied with numbers
 		for(int i = 0; i < 6; i++){
@@ -21,7 +32,24 @@ public class SumFunControllerTest {
 				mockTileGrid[i][j] = new ObservableTile(i,j,6);
 			}
 		}
+		mockTileGrid[2][2].setNumber(0);
+		mockTileGrid[2][3].setNumber(1);
+		mockTileGrid[3][2].setNumber(2);
+		mockTileGrid[3][4].setNumber(3);
 		sfc.createMockboard(mockTileGrid);
+		assertEquals(false, sfc.checkNeighbors(1, 1, 0));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		
+		assertEquals(false, sfc.checkNeighbors(0, 3, 9));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		
 		// Black-box Testing
 		// assertEquals("Error", false, sfc.checkNeighbors(tiles, row, column, queueValue));
 	}
