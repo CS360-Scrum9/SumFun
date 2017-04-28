@@ -1,17 +1,13 @@
 package controller;
 
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
-import java.awt.List;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 
 import javax.swing.ImageIcon;
@@ -37,7 +33,6 @@ public class SumFunController {
 		return sfc;
 	}
 	
-	private ImageIcon icon;
 	private Scoring score;
 	private TileQueue tileQ;
 	private ObservableTile[][] tiles;
@@ -70,7 +65,7 @@ public class SumFunController {
 		this.canclick = true;
 		this.timed = false;
 		this.fileHandler = new FileHandler();
-		icon = new ImageIcon("Explosion.gif");
+
 		
 		this.gamemode = gamemode;
 		this.highScoreBoard = highScoreBoard;
@@ -216,6 +211,7 @@ public class SumFunController {
 				}
 			}
 		}
+
 		return sum%10 == queueValue;
 	}
 	
@@ -464,5 +460,9 @@ public class SumFunController {
 	
 	public void createMockboard(ObservableTile[][] ot){
 		this.tiles = ot;
+	}
+	
+	public MoveCounter getMoveCounter(){
+		return mc;
 	}
 }
