@@ -19,7 +19,8 @@ public enum SoundEffect {
    HINT("src/controller/audio/Hint.wav"),
    START("src/controller/audio/Start.wav"),
    WIN("src/controller/audio/Win.wav"),
-   LOSE("src/controller/audio/Lose.wav");
+   LOSE("src/controller/audio/Lose.wav"),
+   BG("src/controller/audio/BG.wav");
    
    // Nested class for specifying volume
    public static enum Volume {

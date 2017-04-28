@@ -83,6 +83,7 @@ public class SumFunController {
 		this.board.addNewUntimedGameButtonHandler(new NewUntimedGameButtonHandler());
 		
 		SoundEffect.START.play();
+		SoundEffect.BG.loop(0);
 	}
 
 	private class TileButtonHandler implements ActionListener {
