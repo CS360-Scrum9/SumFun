@@ -4,13 +4,17 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
+import java.awt.List;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -33,6 +37,7 @@ public class SumFunController {
 		return sfc;
 	}
 	
+	private ImageIcon icon;
 	private Scoring score;
 	private TileQueue tileQ;
 	private ObservableTile[][] tiles;
@@ -65,6 +70,7 @@ public class SumFunController {
 		this.canclick = true;
 		this.timed = false;
 		this.fileHandler = new FileHandler();
+		icon = new ImageIcon("Explosion.gif");
 		
 		this.gamemode = gamemode;
 		this.highScoreBoard = highScoreBoard;
@@ -94,7 +100,12 @@ public class SumFunController {
 				if(!tile.isOccupied()){
 				 	placeTile(tiles[row][column], tileQ.getNextValue());
 				}else if(clearTilesUsed == false){
-					clearAllTilesWithNumber(tile.getNumber());
+					try {
+						clearAllTilesWithNumber(tile.getNumber());
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					toggleTiles();
 				}
 			}
@@ -391,8 +402,8 @@ public class SumFunController {
 			System.exit(0);	
 		}
 	}
-	
-	private void clearAllTilesWithNumber(int n){
+
+	private void clearAllTilesWithNumber(int n) throws InterruptedException{
 		int count = 0;
 		for(int i = 1; i < 10; i++){
 			for(int j = 1; j < 10; j++){
@@ -403,6 +414,8 @@ public class SumFunController {
 				}
 			}
 		}
+		
+		
 		board.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		SoundEffect.FUSE.stop();
 		SoundEffect.EXPLODE.play();
@@ -434,6 +447,10 @@ public class SumFunController {
 		if(maxCount > 0){
 			tiles[row][column].startFlash();
 			tiles[row][column].stopFlash();
+		}
+		else if(maxCount == 0){
+			SoundEffect.ERROR.play();
+			JOptionPane.showMessageDialog(null, "There are no valid moves.", "SumFun", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
