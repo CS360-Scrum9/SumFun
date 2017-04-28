@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Color;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -65,6 +66,11 @@ public class Tile extends JButton{
 	
 	public void setOccupied(boolean isOccupied){
 		this.setEnabled(!isOccupied);
+		if(isOccupied){
+			this.setBackground(Color.CYAN);
+		} else {
+			this.setBackground(Color.MAGENTA);
+		}
 		this.isOccupied = isOccupied;
 	}
 

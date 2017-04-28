@@ -95,6 +95,11 @@ public class BoardView extends JFrame implements Observer{
 		
 		tileButtons = new Tile[11][11];
 		
+		pnlGrid.setBackground(Color.ORANGE);
+		pnlQueue.setBackground(Color.ORANGE);
+		pnlNorth.setBackground(Color.ORANGE);
+		pnlSouth.setBackground(Color.ORANGE);
+		
 		for (int i = 0; i < 11; i++) {
 			for (int j = 0; j < 11; j++) {
 				tileButtons[i][j] = this.tiles[i][j].getTile();
@@ -103,6 +108,8 @@ public class BoardView extends JFrame implements Observer{
 					tileButtons[i][j].setText("" + this.tiles[i][j].getNumber());
 				}
 				if(i > 0 && i < 10 && j > 0 && j < 10){
+					tileButtons[i][j].setFont(new Font(tileButtons[i][j].getFont().getFontName(), Font.BOLD, 36));
+					tileButtons[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));;
 					pnlGrid.add(tileButtons[i][j]);
 				}
 			}
@@ -122,6 +129,7 @@ public class BoardView extends JFrame implements Observer{
 			queueTiles[i] = new JLabel("", SwingConstants.CENTER);
 			if(i==4){
 				queueTiles[i].setFont(new Font(queueTiles[i].getFont().getFontName(), Font.BOLD, 36));
+				queueTiles[i].setBackground(Color.ORANGE);
 			} else {
 				queueTiles[i].setFont(new Font(queueTiles[i].getFont().getFontName(), Font.PLAIN, 12));
 			}
