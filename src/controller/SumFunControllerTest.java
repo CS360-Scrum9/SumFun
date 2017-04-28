@@ -38,28 +38,28 @@ public class SumFunControllerTest {
 		mockTileGrid[3][2].setNumber(8);
 		mockTileGrid[3][4].setNumber(9);
 		sfc.createMockboard(mockTileGrid);
+		
+		// Black-box Testing
 		assertEquals(true, sfc.checkNeighbors(1, 1, 0));
 		assertEquals(true, sfc.checkNeighbors(3, 3, 9));
 		
 		try{
-		assertEquals(false, sfc.checkNeighbors(0, 0, 9));
+			assertEquals(false, sfc.checkNeighbors(0, 0, 9));
 		}catch(IndexOutOfBoundsException e){
 			
 		}
 		try{
-
-		assertEquals(false, sfc.checkNeighbors(5, 5, 9));
+			assertEquals(false, sfc.checkNeighbors(5, 5, 9));
 		}catch(IndexOutOfBoundsException e){
 			
 		}
 		try{
-
-		assertEquals(false, sfc.checkNeighbors(5, 0, 9));
+			assertEquals(false, sfc.checkNeighbors(5, 0, 9));
 		}catch(IndexOutOfBoundsException e){
 			
 		}
 		try{
-		assertEquals(false, sfc.checkNeighbors(0, 5, 9));
+			assertEquals(false, sfc.checkNeighbors(0, 5, 9));
 		}catch(IndexOutOfBoundsException e){
 			
 		}
@@ -67,7 +67,7 @@ public class SumFunControllerTest {
 		assertEquals(false, sfc.checkNeighbors(3, 3, -1));
 		assertEquals(false, sfc.checkNeighbors(3, 3, 10));
 		
-		// Black-box Testing
+		// Glass-box Testing
 		// assertEquals("Error", false, sfc.checkNeighbors(tiles, row, column, queueValue));
 	}
 
