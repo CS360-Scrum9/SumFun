@@ -16,12 +16,13 @@ public class SumFunControllerTest {
 	@Test
 	public void testCheckNeighbors() {
 		
+		mockTileGrid = new ObservableTile[6][6];
 		
 		/*
 		 * Input condition:				Class: 	  
 		 * Value of queueValue:		0 <= int <= 9, int < 0, int > 10
-		 * Value of row:			0 < int < length of tilegrid (in this case 4), int < 0, int > 10
-		 * Value of column:			0 < int < length of tilegrid (in this case 4), int < 0, int > 10
+		 * Value of row:			1 <= int <= length of tilegrid (in this case 4), int < 1, int > length of tilegrid
+		 * Value of column:			1 <= int <= length of tilegrid (in this case 4), int < 1, int > length of tilegrid
 		 * 
 		 * */
 		 
@@ -34,21 +35,37 @@ public class SumFunControllerTest {
 		}
 		mockTileGrid[2][2].setNumber(0);
 		mockTileGrid[2][3].setNumber(1);
-		mockTileGrid[3][2].setNumber(2);
-		mockTileGrid[3][4].setNumber(3);
+		mockTileGrid[3][2].setNumber(8);
+		mockTileGrid[3][4].setNumber(9);
 		sfc.createMockboard(mockTileGrid);
-		assertEquals(false, sfc.checkNeighbors(1, 1, 0));
-		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		assertEquals(true, sfc.checkNeighbors(1, 1, 0));
+		assertEquals(true, sfc.checkNeighbors(3, 3, 9));
 		
-		assertEquals(false, sfc.checkNeighbors(0, 3, 9));
-		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
-		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
-		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
-		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
-		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
-		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
-		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
-		assertEquals(false, sfc.checkNeighbors(3, 3, 9));
+		try{
+		assertEquals(false, sfc.checkNeighbors(0, 0, 9));
+		}catch(IndexOutOfBoundsException e){
+			
+		}
+		try{
+
+		assertEquals(false, sfc.checkNeighbors(5, 5, 9));
+		}catch(IndexOutOfBoundsException e){
+			
+		}
+		try{
+
+		assertEquals(false, sfc.checkNeighbors(5, 0, 9));
+		}catch(IndexOutOfBoundsException e){
+			
+		}
+		try{
+		assertEquals(false, sfc.checkNeighbors(0, 5, 9));
+		}catch(IndexOutOfBoundsException e){
+			
+		}
+		
+		assertEquals(false, sfc.checkNeighbors(3, 3, -1));
+		assertEquals(false, sfc.checkNeighbors(3, 3, 10));
 		
 		// Black-box Testing
 		// assertEquals("Error", false, sfc.checkNeighbors(tiles, row, column, queueValue));
@@ -57,7 +74,6 @@ public class SumFunControllerTest {
 	@Test
 	public void testResetNeighbors() {
 		// Black-box Testing
-		fail("Not yet implemented");
 	}
 
 }
