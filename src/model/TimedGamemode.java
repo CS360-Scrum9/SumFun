@@ -1,5 +1,6 @@
 package model;
 
+import controller.SoundEffect;
 import controller.SumFunController;
 
 import java.awt.event.ActionEvent;
@@ -66,6 +67,7 @@ public class TimedGamemode extends Gamemode {
 				lblTimer.setText(convertToString());
 				timeLeft--;
 			} else {
+				SoundEffect.LOSE.play();
 				controller.gameOver("Game Over! You ran out of time! New Game?", JOptionPane.ERROR_MESSAGE);
 			}
 				

@@ -2,6 +2,10 @@ package controller;
 
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -71,6 +75,8 @@ public class SumFunController {
 		this.board.addRemoveButtonHandler(new RemoveButtonHandler());
 		this.board.addNewTimedGameButtonHandler(new NewTimedGameButtonHandler());
 		this.board.addNewUntimedGameButtonHandler(new NewUntimedGameButtonHandler());
+		
+		SoundEffect.START.play();
 	}
 
 	private class TileButtonHandler implements ActionListener {
@@ -103,14 +109,15 @@ public class SumFunController {
 		public void actionPerformed(ActionEvent e) {
 			button = (JButton) e.getSource();
 			button.setEnabled(false);
-			
-			Timer randomizer = new Timer(10, new ActionListener(){
+			SoundEffect.SPIN.play();
+			Timer randomizer = new Timer(25, new ActionListener(){
 			private int count = 0;
 		    private int maxCount = 50;
 				 		    
 				public void actionPerformed(ActionEvent e){
 					if (count >= maxCount) {
 						((Timer) e.getSource()).stop();
+						SoundEffect.SPIN.stop();
 					} else {
 						tileQ.reset();
 						count++;
@@ -135,7 +142,7 @@ public class SumFunController {
 				if(hintCount < 1){
 					button.setEnabled(false);
 				}
-
+				SoundEffect.HINT.play();
 			}
 		}
 	}
@@ -148,7 +155,12 @@ public class SumFunController {
 		public void actionPerformed(ActionEvent e){
 			toggleTiles();
 			button = (JButton) e.getSource();
-			button.setEnabled(false); 
+			button.setEnabled(false);
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+		    Image image = toolkit.getImage(getClass().getResource("img/bombicon.png"));
+		    Cursor bomb = toolkit.createCustomCursor(image, new Point(0,0), "pencil");
+		    board.setCursor(bomb);
+		    SoundEffect.FUSE.loop(0);
 		}
 	}
 	
@@ -229,6 +241,7 @@ public class SumFunController {
 		if(checkNeighbors(tile.getRow(), tile.getColumn(), queueValue)) {
 			tile.setOccupied(true);
 			tile.setNumber(queueValue);
+			SoundEffect.CORRECT.play();
 			Timer greenFlash = new Timer(200, new ActionListener(){
 			 	private int count = 0;
 			 	private int maxCount = 4;
@@ -265,6 +278,7 @@ public class SumFunController {
 		} else { 
 			tile.setOccupied(true);
 			tile.setNumber(queueValue);
+			SoundEffect.ERROR.play();
 			Timer redFlash = new Timer(200, new ActionListener(){
 				 private int count = 0;
 				 private int maxCount = 4;
@@ -295,6 +309,7 @@ public class SumFunController {
 				tiles[i][j].resetTile();
 			}
 		}
+		SoundEffect.START.play();
 		hintCount = 3;
 		tileQ.reset();
 		mc.setTileCount(49);
@@ -314,6 +329,7 @@ public class SumFunController {
 		}
 		
 		if(mc.getTileCount() >= 81 && clearTilesUsed == true){
+			SoundEffect.LOSE.play();
 			gameOver("Game Over! All tiles are occupied! New Game?", JOptionPane.ERROR_MESSAGE);
 		} else if(mc.getTileCount() <= 0){
 			if (timed) {
@@ -333,7 +349,7 @@ public class SumFunController {
 				}
 				highScoreBoard.setVisible(true);
 			}*/
-			
+			SoundEffect.WIN.play();
 			gameOver("Congratulations! You win! New Game?", JOptionPane.PLAIN_MESSAGE);
 			
 		}
@@ -344,6 +360,7 @@ public class SumFunController {
 			}
 			
 			if(mc.getMoveCount() <= 0){
+				SoundEffect.LOSE.play();
 				gameOver("Game Over! You ran out of moves! New Game?", JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -386,7 +403,9 @@ public class SumFunController {
 				}
 			}
 		}
-		
+		board.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		SoundEffect.FUSE.stop();
+		SoundEffect.EXPLODE.play();
 		mc.setTileCount(mc.getTileCount() - count);
 		clearTilesUsed = true;
 		clearTiles = true;
