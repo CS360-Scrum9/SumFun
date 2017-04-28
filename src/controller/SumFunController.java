@@ -262,7 +262,7 @@ public class SumFunController {
 			 			for(int i = -1; i < 2; i++){
 			 			    for(int j = -1; j < 2; j++){
 			 			    	if(tiles[row+i][col+j].isOccupied()) {
-			 			    		tiles[row+i][col+j].getTile().setBackground(null);
+			 			    		tiles[row+i][col+j].getTile().setBackground(Color.CYAN);
 			 			        }
 			 			    }
 			 			}
@@ -273,7 +273,7 @@ public class SumFunController {
 			 	    	for(int i = -1; i < 2; i++){
 			    			for(int j = -1; j < 2; j++){
 			 			    	if(tiles[row+i][col+j].isOccupied()) {
-			 						tiles[row+i][col+j].getTile().setBackground( on ? Color.GREEN : null);
+			 						tiles[row+i][col+j].getTile().setBackground( on ? Color.GREEN : Color.CYAN);
 			    				}
 			    			}
 			    		}
@@ -294,11 +294,11 @@ public class SumFunController {
 				 
 				 public void actionPerformed(ActionEvent e) {
 				 	if (count >= maxCount) {
-				 		tile.getTile().setBackground(null);
+				 		tile.getTile().setBackground(Color.CYAN);
 				 		((Timer) e.getSource()).stop();
 				 		canclick = true;
 				    } else {
-				 		tile.getTile().setBackground( on ? Color.RED : null);
+				 		tile.getTile().setBackground( on ? Color.RED : Color.CYAN);
 				 		on = !on;
 				 		count++;
 				 	}

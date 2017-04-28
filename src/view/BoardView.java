@@ -13,6 +13,7 @@ import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -80,6 +81,10 @@ public class BoardView extends JFrame implements Observer{
 		mc.addObserver(this);
 		this.gamemode = gamemode;
 		
+		ImageIcon icon = new ImageIcon("src/controller/img/icon.png");
+		this.setIconImage(icon.getImage());
+		this.setTitle("SumFun with Numbers! Learning Modularity");
+		
 		lblCounter = new JLabel("Moves Left: " + mc.getMoveCount(), SwingConstants.CENTER);
 		lblTimer = new JLabel("Time Left: 5:00", SwingConstants.CENTER);
 		
@@ -91,9 +96,14 @@ public class BoardView extends JFrame implements Observer{
 		pnlGrid.setLayout(new GridLayout(9, 9));
 		pnlNorth.setLayout(new GridLayout(1, 2));
 		pnlQueue.setLayout(new GridLayout(7, 1));
-		pnlSouth.setLayout(new GridLayout(1, 4));
+		pnlSouth.setLayout(new GridLayout(2, 2));
 		
 		tileButtons = new Tile[11][11];
+		
+		pnlGrid.setBackground(Color.ORANGE);
+		pnlQueue.setBackground(Color.ORANGE);
+		pnlNorth.setBackground(Color.ORANGE);
+		pnlSouth.setBackground(Color.ORANGE);
 		
 		for (int i = 0; i < 11; i++) {
 			for (int j = 0; j < 11; j++) {
@@ -103,12 +113,17 @@ public class BoardView extends JFrame implements Observer{
 					tileButtons[i][j].setText("" + this.tiles[i][j].getNumber());
 				}
 				if(i > 0 && i < 10 && j > 0 && j < 10){
+					tileButtons[i][j].setFont(new Font(tileButtons[i][j].getFont().getFontName(), Font.BOLD, 36));
+					tileButtons[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));;
 					pnlGrid.add(tileButtons[i][j]);
 				}
 			}
 		}
 
 		scoreLabel = new JLabel(score.toString(), SwingConstants.CENTER);
+
+		lblCounter.setFont(new Font(lblCounter.getFont().getFontName(), Font.ITALIC, 24));
+		scoreLabel.setFont(new Font(scoreLabel.getFont().getFontName(), Font.ITALIC, 24));
 		
 		pnlNorth.add(lblCounter);
 		pnlNorth.add(scoreLabel);
@@ -116,14 +131,19 @@ public class BoardView extends JFrame implements Observer{
 		queueRefresh = new JButton("<html>Refresh<br>Queue</html>");
 		queueTiles = new JLabel[5];
 		queueTitle = new JLabel("Queue", SwingConstants.CENTER);
+		queueTitle.setFont(new Font(queueTitle.getFont().getFontName(), Font.ITALIC, 24));
+		queueRefresh.setFont(new Font(queueTitle.getFont().getFontName(), Font.CENTER_BASELINE, 18));
 		pnlQueue.add(queueTitle);
 		
 		for(int i = 4; i >= 0; i--){
 			queueTiles[i] = new JLabel("", SwingConstants.CENTER);
 			if(i==4){
 				queueTiles[i].setFont(new Font(queueTiles[i].getFont().getFontName(), Font.BOLD, 36));
+				queueTiles[i].setBackground(Color.ORANGE);
+				queueTiles[i].setForeground(Color.DARK_GRAY);
 			} else {
-				queueTiles[i].setFont(new Font(queueTiles[i].getFont().getFontName(), Font.PLAIN, 12));
+				queueTiles[i].setFont(new Font(queueTiles[i].getFont().getFontName(), Font.PLAIN, 20));
+				queueTiles[i].setForeground(Color.GRAY);
 			}
 			pnlQueue.add(queueTiles[i]);
 		}
@@ -137,6 +157,11 @@ public class BoardView extends JFrame implements Observer{
 		removeButton = new JButton("Remove a Number");
 		timedGameButton = new JButton("New Timed Game");
 		untimedGameButton = new JButton("New Untimed Game");
+		
+		hintButton.setFont(new Font(untimedGameButton.getFont().getFontName(), Font.PLAIN, 18));
+		removeButton.setFont(new Font(untimedGameButton.getFont().getFontName(), Font.PLAIN, 18));
+		timedGameButton.setFont(new Font(untimedGameButton.getFont().getFontName(), Font.PLAIN, 18));
+		untimedGameButton.setFont(new Font(untimedGameButton.getFont().getFontName(), Font.PLAIN, 18));
 		
 		pnlSouth.add(hintButton);
 		pnlSouth.add(removeButton);
