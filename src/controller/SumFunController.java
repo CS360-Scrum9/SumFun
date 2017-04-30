@@ -202,7 +202,6 @@ public class SumFunController {
 		int sum = 0;
 		neighborCount = 0;
 
-		//Add the numbers from all surrounding tiles
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
 				if(!(i == 0 && j == 0) && tiles[row+i][column+j].isOccupied()) {
@@ -223,19 +222,12 @@ public class SumFunController {
 	 * @param column The column of the tile in question. 1 <= column <= 9
 	 */
 	public void resetNeighbors(int row, int column){
-		int newScore;
 		for(int i = -1; i < 2; i++){
 			for(int j = -1; j < 2; j++){
 				tiles[row + i][column + j].setOccupied(false);
 				tiles[row+i][column+j].setNumber(0);
 			}
 		}
-		mc.setTileCount(mc.getTileCount() - neighborCount);
-		if(neighborCount >= 3){
-			newScore = score.getScore() + neighborCount * 10;
-			score.setScore(newScore);
-		}
-		checkGameOver();
 	}
 	
 	/**
@@ -246,11 +238,13 @@ public class SumFunController {
 	 */
 	public void placeTile(ObservableTile tile, int queueValue){
 		canclick = false;
+	
 		if(checkNeighbors(tile.getRow(), tile.getColumn(), queueValue)) {
 			tile.setOccupied(true);
 			tile.setNumber(queueValue);
 			SoundEffect.CORRECT.play();
 			Timer greenFlash = new Timer(200, new ActionListener(){
+				private int newScore;
 			 	private int count = 0;
 			 	private int maxCount = 4;
 			 	private boolean on = false;
@@ -269,6 +263,12 @@ public class SumFunController {
 			 			((Timer) e.getSource()).stop();
 			 			resetNeighbors(tile.getRow(), tile.getColumn());
 			 			canclick = true;
+			 			mc.setTileCount(mc.getTileCount() - neighborCount);
+			 			if(neighborCount >= 3){
+			 				newScore = score.getScore() + neighborCount * 10;
+			 				score.setScore(newScore);
+			 			}
+			 			checkGameOver();
 			        } else {
 			 	    	for(int i = -1; i < 2; i++){
 			    			for(int j = -1; j < 2; j++){
@@ -460,9 +460,5 @@ public class SumFunController {
 	
 	public void createMockboard(ObservableTile[][] ot){
 		this.tiles = ot;
-	}
-	
-	public MoveCounter getMoveCounter(){
-		return mc;
 	}
 }
