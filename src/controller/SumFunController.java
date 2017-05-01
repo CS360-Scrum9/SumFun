@@ -8,7 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.logging.FileHandler;
+import model.FileHandler;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -343,10 +343,10 @@ public class SumFunController {
 			if (timed) {
 				gamemode.stopTimer();
 			}
-			/*if (( fileHandler).isHighScore(score.getScore(), timed)) {
+			if (( fileHandler).isHighScore(score.getScore(), timed)) {
 				String name = JOptionPane.showInputDialog(null, "Congratulations! New High Score!  Please enter your name");
 				if (timed) {
-					fileHandler.addScore(name, gamemode.getTime(), score.getScore(), timed);
+					fileHandler.addScore(name, Integer.toString(gamemode.getTime()), score.getScore(), timed);
 				} else {
 					fileHandler.addScore(name, Integer.toString(mc.getMoveCount()) , score.getScore(), timed);
 				}
@@ -356,7 +356,7 @@ public class SumFunController {
 					highScoreBoard.generateView("Untimed");
 				}
 				highScoreBoard.setVisible(true);
-			}*/
+			}
 			SoundEffect.WIN.play();
 			gameOver("Congratulations! You win! New Game?", JOptionPane.PLAIN_MESSAGE);
 			
