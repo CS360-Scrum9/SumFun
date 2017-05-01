@@ -2,6 +2,7 @@ import controller.SumFunController;
 
 import java.io.IOException;
 
+import model.FileHandler;
 import model.MoveCounter;
 import model.ObservableTile;
 import model.Scoring;
@@ -20,6 +21,8 @@ public class Driver {
 	 * @throws SecurityException 
 	 */
 	public static void main(String[] args) throws SecurityException, IOException {
+		FileHandler fh = new FileHandler();
+		fh.checkFiles();
 		HighScoreBoard highScores = new HighScoreBoard("Untimed");
 		ObservableTile[][] tiles = new ObservableTile[11][11];
 		for(int i = 0; i < SIZE; i++){

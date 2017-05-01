@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class FileHandler {
 	
-	private final String timedFile = "TimedHighScores.txt";
-	private final String untimedFile = "UntimedHighScores.txt";
+	private final String timeFile = "BestTimes.txt";
+	private final String scoreFile = "BestScores.txt";
+	private	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/mm/dd HH:mm:ss");
+
 	
 	public FileHandler(){}
 	
@@ -18,9 +22,9 @@ public class FileHandler {
 		String fileName;
 		
 		if (timed) {
-			fileName = timedFile;
+			fileName = timeFile;
 		} else {
-			fileName = untimedFile;
+			fileName = scoreFile;
 		}
 		
 		String[][] scores = getScores(fileName);
@@ -43,9 +47,9 @@ public class FileHandler {
 		
 		
 		if (timed) {
-			fileName = timedFile;
+			fileName = timeFile;
 		} else {
-			fileName = untimedFile;
+			fileName = scoreFile;
 		}
 		
 		int index = 0;
@@ -60,14 +64,14 @@ public class FileHandler {
 			i++;
 		}
 		
-		String[][] newScores = new String[10][3];
+		String[][] newScores = new String[10][4];
 		i = 0;
 		int k = 0;
 		while (scores[k] != null) {
 			if (i != index) {
 				newScores[i] = scores[k];
 			} else {
-				String[] newScore = {name, extra, Integer.toString(score)};
+				String[] newScore = {name, extra, Integer.toString(score), dtf.format(LocalDateTime.now())};
 				newScores[i] = newScore;
 				k--;
 			}
@@ -107,20 +111,10 @@ public class FileHandler {
 		File file = new File(fileName);
 		Scanner input = null;
 		
-		while (input == null) {
-			try {
-				input = new Scanner(file);
-			} catch (FileNotFoundException ex) {
-				
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					System.out.println(e);
-				}
-				
-				System.out.println(ex);
-				System.out.println("Created new " + fileName);
-			}
+		try {
+			input = new Scanner(file);
+		} catch (IOException e) {
+			
 		}
 		
 		String[][] scores = new String[10][];
@@ -136,5 +130,33 @@ public class FileHandler {
 		input.close();
 		
 		return scores;
+	}
+	
+	public void checkFiles() {
+		
+		String[] files = {timeFile, scoreFile};
+		for (int i = 0; i < files.length; i++) {
+			File file = new File(files[i]);
+			Scanner input = null;
+		
+			while (input == null) {
+				try {
+					input = new Scanner(file);
+				} catch (FileNotFoundException ex) {
+					try {
+						file.createNewFile();
+						FileWriter fw = new FileWriter(files[i]);
+						for (int j = 0; j < 10; j++) {
+							 fw.write("name, 0, 0, date");
+						}
+						fw.close();
+					} catch (IOException e) {
+						System.out.println(e);
+					}
+					
+					System.out.println(ex);
+				}
+			}
+		}
 	}
 }
