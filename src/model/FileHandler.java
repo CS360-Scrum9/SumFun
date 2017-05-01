@@ -29,14 +29,12 @@ public class FileHandler {
 		
 		String[][] scores = getScores(fileName);
 		
-		int i = 0;
 		
-		while (scores[i] != null) {
+		for (int i = 0; i < scores.length; i++) {
 			if (score > Integer.parseInt(scores[i][1])) {
 				isHighScore = true;
 				break;
 			}
-			i++;
 		}
 		
 		return isHighScore;

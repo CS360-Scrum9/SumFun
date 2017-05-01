@@ -59,7 +59,7 @@ public class SumFunController {
 		this.board = board; 
 		this.mc = mc;
 		
-		hintCount = 100;
+		hintCount = 3;
 		clearTilesUsed = false;
 		clearTiles = false;
 		this.canclick = true;
@@ -353,13 +353,19 @@ public class SumFunController {
 				String name = JOptionPane.showInputDialog(null, "Congratulations! New High Score!  Please enter your name");
 				if (timed) {
 					fileHandler.addScore(name, gamemode.getTime(), timed);
+					if (fileHandler.isHighScore(score.getScore(), !timed)) {
+						fileHandler.addScore(name, score.getScore(), !timed);
+						HighScoreBoard extra = new HighScoreBoard("Score");
+						extra.generateView("Score");
+						extra.setVisible(true);
+					}
 				} else {
 					fileHandler.addScore(name, score.getScore(), timed);
 				}
 				if (timed) {
-					highScoreBoard.generateView("Timed");
+					highScoreBoard.generateView("Time");
 				} else {
-					highScoreBoard.generateView("Untimed");
+					highScoreBoard.generateView("Score");
 				}
 				highScoreBoard.setVisible(true);
 			}
