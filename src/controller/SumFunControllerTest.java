@@ -1,6 +1,7 @@
 package controller;
 
 import static org.junit.Assert.assertEquals;
+
 import model.ObservableTile;
 
 import org.junit.Test;

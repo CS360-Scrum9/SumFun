@@ -94,7 +94,7 @@ public class HighScoreBoard extends JFrame{
 				lblName[i].setText(scores[i - 1][0]);
 				
 				if (version.equals("Time")) {
-					lblExtra[i].setText(TimedGamemode.convertToString(Integer.parseInt(scores[i][1])));
+					lblExtra[i].setText(TimedGamemode.convertToString(Integer.parseInt(scores[i - 1][1])));
 				} else {
 					lblExtra[i].setText(scores[i - 1][1]);
 				}
