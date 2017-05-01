@@ -2,9 +2,6 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;

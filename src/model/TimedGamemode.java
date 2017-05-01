@@ -35,7 +35,7 @@ public class TimedGamemode extends Gamemode {
 	}
 	
 	public void setController(SumFunController controller) {
-		this.controller = controller;
+		TimedGamemode.controller = controller;
 	}
 	
 	public void startTime(JLabel lblTimer) {

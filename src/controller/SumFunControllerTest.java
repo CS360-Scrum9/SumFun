@@ -1,11 +1,6 @@
 package controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-
-import model.MoveCounter;
 import model.ObservableTile;
 
 import org.junit.Test;
