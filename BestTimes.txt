@@ -1,1 +1,10 @@
-name, 0, 0, datename, 0, 0, datename, 0, 0, datename, 0, 0, datename, 0, 0, datename, 0, 0, datename, 0, 0, datename, 0, 0, datename, 0, 0, datename, 0, 0, date
+Shaylee,283,05/01/2017
+Kenzie,283,05/01/2017
+Lakin,282,05/01/2017
+Eric,276,05/01/2017
+name,0,date
+name,0,date
+name,0,date
+name,0,date
+name,0,date
+name,0,date

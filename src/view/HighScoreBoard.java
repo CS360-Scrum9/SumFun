@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import model.FileHandler;
+import model.TimedGamemode;
 
 public class HighScoreBoard extends JFrame{
 	/**
@@ -27,8 +28,8 @@ public class HighScoreBoard extends JFrame{
 	private JLabel[] lblExtra;
 	private JLabel[] lblScore;
 	
-	private final String timedFile = "TimedHighScores.txt";
-	private final String untimedFile = "UntimedHighScores.txt";
+	private final String timeFile = "BestTimes.txt";
+	private final String scoreFile = "BestScores.txt";
 	
 	private FileHandler fileHandler;
 		
@@ -76,20 +77,27 @@ public class HighScoreBoard extends JFrame{
 		
 		String[][] scores;
 		if (version.equals("Timed")) {
-			scores = fileHandler.getScores(timedFile);
+			scores = fileHandler.getScores(timeFile);
+			lblTitle.setText("Best Times");
 		} else {
-			scores = fileHandler.getScores(untimedFile);
+			scores = fileHandler.getScores(scoreFile);
+			lblTitle.setText("Best Scores");
 		}
 		
 		clearScoreBoard();
-		
-		int i = 0;
-		
-		while (scores[i] != null) {
-			lblName[i].setText(scores[i][0]);
-			lblExtra[i].setText(scores[i][1]);
-			lblScore[i].setText(scores[i][2]);
-			i++;
+				
+		for (int i = 0; i < scores.length; i++) {
+			if (!scores[i][0].equals("name")) {
+				lblName[i].setText(scores[i][0]);
+				
+				if (version.equals("Timed")) {
+					lblExtra[i].setText(TimedGamemode.convertToString(Integer.parseInt(scores[i][1])));
+				} else {
+					lblExtra[i].setText(scores[i][1]);
+				}
+				
+				lblScore[i].setText(scores[i][2]);
+			}
 		}
 	}
 	

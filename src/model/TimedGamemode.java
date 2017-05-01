@@ -58,6 +58,20 @@ public class TimedGamemode extends Gamemode {
 		return "Time Left: " + time;
 	}
 	
+	public static String convertToString(int timeInSeconds) {
+		int minutes = timeInSeconds / 60;
+		int seconds = timeInSeconds % 60;
+		
+		String time = "";
+		
+		if (seconds < 10) {
+			time = minutes + ":0" + seconds;
+		} else {
+			time = minutes + ":" + seconds;
+		}
+		return "" + time;
+	}
+	
 	private class UpdateTime implements ActionListener {
 
 		@Override

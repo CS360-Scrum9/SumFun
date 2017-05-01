@@ -12,7 +12,7 @@ public class FileHandler {
 	
 	private final String timeFile = "BestTimes.txt";
 	private final String scoreFile = "BestScores.txt";
-	private	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/mm/dd HH:mm:ss");
+	private	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
 	
 	public FileHandler(){}
@@ -32,7 +32,7 @@ public class FileHandler {
 		int i = 0;
 		
 		while (scores[i] != null) {
-			if (score > Integer.parseInt(scores[i][2])) {
+			if (score > Integer.parseInt(scores[i][1])) {
 				isHighScore = true;
 				break;
 			}
@@ -42,9 +42,11 @@ public class FileHandler {
 		return isHighScore;
 	}
 	
-	public void addScore(String name, String extra, int score, boolean timed) {
-		String fileName;
+	public void addScore(String name, int score, boolean timed) {	
 		
+		String fileName;
+		int index = 0;
+		int i = 0;
 		
 		if (timed) {
 			fileName = timeFile;
@@ -52,30 +54,27 @@ public class FileHandler {
 			fileName = scoreFile;
 		}
 		
-		int index = 0;
-		int i = 0;
-		
 		String[][] scores = getScores(fileName);
+		
 		while (scores[i] != null) {
-			if (score > Integer.parseInt(scores[i][2])) {
+			if (score > Integer.parseInt(scores[i][1])) {
 				index = i;
 				break;
 			}
 			i++;
 		}
 		
-		String[][] newScores = new String[10][4];
+		String[][] newScores = new String[10][3];
 		i = 0;
 		int k = 0;
-		while (scores[k] != null) {
+		for (i = 0; i < scores.length; i++) {
 			if (i != index) {
 				newScores[i] = scores[k];
 			} else {
-				String[] newScore = {name, extra, Integer.toString(score), dtf.format(LocalDateTime.now())};
+				String[] newScore = {name, Integer.toString(score), dtf.format(LocalDateTime.now())};
 				newScores[i] = newScore;
 				k--;
 			}
-			i++;
 			k++;
 		}
 		
@@ -84,27 +83,20 @@ public class FileHandler {
 		try {
 			File file = new File(fileName);
 			fw = new FileWriter(file);
-			
-			i = 0;
-			
-			while (newScores[i][0] != null) {
+						
+			for (i = 0; i < newScores.length; i++) {
 				String temp = "";
 				for (int j = 0; j < newScores[i].length; j++) {
 					temp += newScores[i][j] + ",";
 				}
 				fw.write(temp.substring(0, temp.length() - 1) + "\n");
-				i++;
 			}
 			
 			fw.close();
 		} catch (IOException e) {
 
 		}
-	
-		
 
-			
-		
 	}
 
 	public String[][] getScores(String fileName) {
@@ -147,7 +139,7 @@ public class FileHandler {
 						file.createNewFile();
 						FileWriter fw = new FileWriter(files[i]);
 						for (int j = 0; j < 10; j++) {
-							 fw.write("name, 0, 0, date");
+							 fw.write("name,0,date\n");
 						}
 						fw.close();
 					} catch (IOException e) {

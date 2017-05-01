@@ -59,7 +59,7 @@ public class SumFunController {
 		this.board = board; 
 		this.mc = mc;
 		
-		hintCount = 3;
+		hintCount = 100;
 		clearTilesUsed = false;
 		clearTiles = false;
 		this.canclick = true;
@@ -317,13 +317,14 @@ public class SumFunController {
 				tiles[i][j].resetTile();
 			}
 		}
+		gamemode.stopTimer();
 		SoundEffect.START.play();
 		hintCount = 3;
 		tileQ.reset();
 		mc.setTileCount(49);
 		score.setScore(0);
 		board.switchGameModeView(version);
-		highScoreBoard.setVisible(false);
+		//highScoreBoard.setVisible(false);
 		clearTilesUsed = false;
 		gamemode.setTime(300);
 		mc.setMoveCount(50);	
@@ -340,15 +341,20 @@ public class SumFunController {
 			SoundEffect.LOSE.play();
 			gameOver("Game Over! All tiles are occupied! New Game?", JOptionPane.ERROR_MESSAGE);
 		} else if(mc.getTileCount() <= 0){
+			int currScore = score.getScore();
+			
 			if (timed) {
 				gamemode.stopTimer();
+				currScore = gamemode.getTime();
 			}
-			if (( fileHandler).isHighScore(score.getScore(), timed)) {
+			
+			
+			if ((fileHandler).isHighScore(currScore, timed)) {
 				String name = JOptionPane.showInputDialog(null, "Congratulations! New High Score!  Please enter your name");
 				if (timed) {
-					fileHandler.addScore(name, Integer.toString(gamemode.getTime()), score.getScore(), timed);
+					fileHandler.addScore(name, gamemode.getTime(), timed);
 				} else {
-					fileHandler.addScore(name, Integer.toString(mc.getMoveCount()) , score.getScore(), timed);
+					fileHandler.addScore(name, score.getScore(), timed);
 				}
 				if (timed) {
 					highScoreBoard.generateView("Timed");
